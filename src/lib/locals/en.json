@@ -160,5 +160,6 @@
 	"NoVideosFound": "No videos found",
 	"NoTCFound": "No training centers found",
 	"NoStateFound": "No state found",
-	"SearchByVideoTitle": "Search by video title"
+	"SearchByVideoTitle": "Search by video title",
+	"Sorry! Failed to load video": "Sorry! Failed to load video."
 }

@@ -2,6 +2,7 @@
 	import { createEventDispatcher } from 'svelte';
 	import { _ } from 'svelte-i18n';
 	import ErrorComponent from '$lib/Components/ErrorComponent.svelte';
+	import { Course_Sorting_Order } from '/src/config/constants.js';
 
 	export let notFoundMessage = 'Not found';
 	export let datatableCardConfig = {
@@ -32,38 +33,38 @@
 	function handleSorting(data, sortOption) {
 		let sortedData = Array.from(data);
 		switch (sortOption) {
-			case $_('ChapterCountLowToHigh'):
+			case Course_Sorting_Order.CHAPTERCNT_LOW_TO_HIGH:
 				sortedData.sort((a, b) => a.numberOfChapters - b.numberOfChapters);
 				break;
-			case $_('ChapterCountHighToLow'):
+			case Course_Sorting_Order.CHAPTERCNT_HIGH_TO_LOW:
 				sortedData.sort((a, b) => b.numberOfChapters - a.numberOfChapters);
 				break;
-			case $_('DurationLowtoHigh'):
+			case Course_Sorting_Order.DURATION_LOW_TO_HIGH:
 				sortedData.sort((a, b) => a.duration - b.duration);
 				break;
-			case $_('DurationHighToLow'):
+			case Course_Sorting_Order.DURATION_HIGH_TO_LOW:
 				sortedData.sort((a, b) => b.duration - a.duration);
 				break;
-			case $_('Title ( A to Z )'):
+			case Course_Sorting_Order.TITLE_A_TO_Z:
 				sortedData.sort(
 					(a, b) => a?.title?.localeCompare(b?.title) || a?.name?.localeCompare(b.name)
 				);
 				break;
-			case $_('TitleZtoA'):
+			case Course_Sorting_Order.TITLE_Z_TO_A:
 				sortedData.sort(
 					(a, b) => b?.title?.localeCompare(a.title) || b?.name?.localeCompare(a.name)
 				);
 				break;
-			case $_('PlannedDateLowToHigh'):
+			case Course_Sorting_Order.PLANNED_DATE_LOW_TO_HIGH:
 				sortedData.sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
 				break;
-			case $_('PlannedDateHighToLow'):
+			case Course_Sorting_Order.PLANNED_DATE_HIGH_TO_LOW:
 				sortedData.sort((a, b) => new Date(b.startDate) - new Date(a.startDate));
 				break;
-			case $_('PlannedCoursesLowToHigh'):
+			case Course_Sorting_Order.PLANNED_COURSES_LOW_TO_HIGH:
 				sortedData.sort((a, b) => a.courseCount - b.courseCount);
 				break;
-			case $_('PlannedCoursesHighToLow'):
+			case Course_Sorting_Order.PLANNED_COURSES_HIGH_TO_LOW:
 				sortedData.sort((a, b) => b.courseCount - a.courseCount);
 				break;
 			default:

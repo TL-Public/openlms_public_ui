@@ -160,5 +160,6 @@
 	"NoVideosFound": "कोई वीडियो नहीं हैं",
 	"NoTCFound": "कोई प्रशिक्षण केंद्र नहीं हैं",
 	"NoStateFound": "कोई राज्य नहीं हैं",
-	"SearchByVideoTitle": "वीडियो शीर्षक से खोजें"
+	"SearchByVideoTitle": "वीडियो शीर्षक से खोजें",
+	"Sorry! Failed to load video": "क्षमा करें! वीडियो लोड करने में विफल"
 }

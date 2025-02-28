@@ -11,6 +11,7 @@
 	import { onMount } from 'svelte';
 	import InlinePicker from '$lib/Components/InlinePicker.svelte';
 	import { formatDateMMMYYYY } from '$lib/utils/helper.js';
+	import { Course_Sorting_Order } from '/src/config/constants.js';
 
 	export let data;
 
@@ -130,15 +131,38 @@
 	$: setSortActions($_);
 	function setSortActions() {
 		sortActionItems = [
-			{ id: 1, name: $_('Title ( A to Z )'), displayName: $_('Title ( A to Z )') },
-			{ id: 2, name: $_('TitleZtoA'), displayName: $_('TitleZtoA') },
-			{ id: 3, name: $_('DurationLowtoHigh'), displayName: $_('DurationLowtoHigh') },
-			{ id: 4, name: $_('DurationHighToLow'), displayName: $_('DurationHighToLow') },
-			{ id: 5, name: $_('ChapterCountLowToHigh'), displayName: $_('ChapterCountLowToHigh') },
-			{ id: 6, name: $_('ChapterCountHighToLow'), displayName: $_('ChapterCountHighToLow') },
-			{ id: 7, name: $_('PlannedDateLowToHigh'), displayName: $_('PlannedDateLowToHigh') },
-			{ id: 8, name: $_('PlannedDateHighToLow'), displayName: $_('PlannedDateHighToLow') }
-		];
+			{ id: 1, name: Course_Sorting_Order.TITLE_A_TO_Z, displayName: $_('Title ( A to Z )') },
+			{ id: 2, name: Course_Sorting_Order.TITLE_Z_TO_A, displayName: $_('TitleZtoA') },
+			{
+				id: 3,
+				name: Course_Sorting_Order.DURATION_LOW_TO_HIGH,
+				displayName: $_('DurationLowtoHigh')
+			},
+			{
+				id: 4,
+				name: Course_Sorting_Order.DURATION_HIGH_TO_LOW,
+				displayName: $_('DurationHighToLow')
+			},
+			{
+				id: 5,
+				name: Course_Sorting_Order.CHAPTERCNT_LOW_TO_HIGH,
+				displayName: $_('ChapterCountLowToHigh')
+			},
+			{
+				id: 6,
+				name: Course_Sorting_Order.CHAPTERCNT_HIGH_TO_LOW,
+				displayName: $_('ChapterCountHighToLow')
+			},
+			{
+				id: 7,
+				name: Course_Sorting_Order.PLANNED_DATE_LOW_TO_HIGH,
+				displayName: $_('PlannedDateLowToHigh')
+			},
+			{
+				id: 8,
+				name: Course_Sorting_Order.PLANNED_DATE_HIGH_TO_LOW,
+				displayName: $_('PlannedDateHighToLow')
+			}]
 	}
 
 	function handleSort(e) {

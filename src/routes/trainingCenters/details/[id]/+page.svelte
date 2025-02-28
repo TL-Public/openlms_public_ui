@@ -23,14 +23,14 @@
 		}
 	};
 
-	let tableData = data.centerCoursesData?.map((entry) => ({
+	let tableData = data?.centerCoursesData?.map((entry) => ({
 		...entry,
 		formattedStartDate: formatDateMMMYYYY(new Date(entry.startYear, entry.startMonth - 1)), // For display
 		duration: entry?.duration ? entry.duration : 0,
 		formattedDuration: entry?.duration
 			? `${entry.duration} ${entry.duration > 1 ? 'days' : 'day'}`
 			: '0 days', // For display
-		chapters: entry?.chapters
+		chapters: entry?.numberOfChapters
 	}));
 
 	let centerData = data.centerData;
@@ -66,7 +66,8 @@
 			{
 				key: 'formattedStartDate',
 				name: $format('PlannedDate'),
-				sortKey: 'startDate'
+				sortKey: 'startDate',
+				highlight: true
 			},
 			{
 				key: 'formattedDuration',
@@ -100,7 +101,8 @@
 				{
 					key: 'formattedStartDate',
 					name: $format('PlannedDate'),
-					sortKey: 'startDate'
+					sortKey: 'startDate',
+					highlight: true
 				},
 				{
 					key: 'formattedDuration',

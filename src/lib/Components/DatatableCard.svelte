@@ -174,12 +174,12 @@
 
 					<div class="py-2 flex flex-col gap-2 relative flex-1">
 						<h2 class="text-sm font-semibold text-darkGray line-clamp-2">
-							{data[cardHeaderDisplay.title?.key] || ''}
+							{data[cardHeaderDisplay.title?.key] ?? ''}
 						</h2>
 						{#each cardHeaderDisplay?.nonTitleData ?? [] as key, index (index)}
-							<h4 class="text-xs text-darkGray">
-								{key.name}: <span class="font-semibold">{data[key.key] || '-'}</span>
-							</h4>
+							<p class="text-xs text-darkGray {key.highlight ? 'font-bold' : 'font-medium'}">
+								{key.name}: <span>{data[key.key] ?? '-'}</span>
+							</p>
 						{/each}
 					</div>
 				</div>

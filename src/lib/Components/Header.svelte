@@ -104,7 +104,7 @@
 		</a>
 	</div>
 	<!-- Desktop Header Menu Items -->
-	<div class="hidden sm:flex justify-between sm:gap-4">
+	<div class="hidden md:flex justify-between md:gap-4">
 		<ul class="flex gap-1 lg:gap-4 text-sm items-center">
 			<li class="p-2"><a href="/courses">{$_('Courses')}</a></li>
 			<li class="p-2"><a href="/trainingCenters">{$_('TrainingCntrs')}</a></li>
@@ -176,7 +176,7 @@
 
 	<!-- Mobile Header Button -->
 
-	<div class="sm:hidden">
+	<div class="md:hidden">
 		{#if burgerMenuOpen}
 			<!-- Button on Menu open state -->
 

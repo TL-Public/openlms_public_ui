@@ -3,6 +3,7 @@ import { locale } from 'svelte-i18n';
 export const handle = async ({ event, resolve }) => {
 	const cookieLang = event?.cookies?.get('language');
 	const authToken = event?.cookies?.get('authToken');
+	const name = event?.cookies?.get('name');
 	const lang = cookieLang || 'en';
 
 	if (lang) {
@@ -11,7 +12,7 @@ export const handle = async ({ event, resolve }) => {
 	}
 
 
-	if (authToken) {
+	if (authToken && name) {
 		event.locals.user = {
 			isAuthenticated: true
 		};

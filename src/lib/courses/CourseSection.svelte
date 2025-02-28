@@ -67,5 +67,4 @@
 	{errorInVideos}
 	{loadingInVideos}
 	{courseUuid}
-	globalSelectedLang={lang}
 />

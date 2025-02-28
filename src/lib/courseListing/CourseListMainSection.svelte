@@ -65,6 +65,7 @@
 
 	onMount(async () => {
 		selectedSortOptionDisplayName = sortActionItems[0]?.displayName;
+		selectedSortOption = sortActionItems[0]?.name;
 		expandedItem = category;
 
 		const categorySet = new Set();
@@ -147,7 +148,7 @@
 					on:pickerSelection={handleSort}
 					optionList={sortActionItems}
 					addClass={'justify-self-end'}
-					defaultSortItem={sortActionItems[0]?.name}
+					defaultSortItem={selectedSortOption}
 				/>
 			</div>
 		{/if}
@@ -182,7 +183,6 @@
 			{error}
 			{loading}
 			{selectedSortOption}
-			defaultSortItem={sortActionItems[0]?.name}
 		/>
 	{/if}
 </div>
@@ -239,7 +239,6 @@
 				{error}
 				{loading}
 				{selectedSortOption}
-				defaultSortItem={sortActionItems[0]?.name}
 			/>
 		</div>
 	</div>

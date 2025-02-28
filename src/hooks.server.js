@@ -6,7 +6,7 @@ export const handle = async ({ event, resolve }) => {
 	const lang = cookieLang || 'en';
 
 	if (lang) {
-		locale.set(lang);
+		// locale.set(lang);
 		event.locals.lang = lang; // Pass the language to the load function
 	}
 

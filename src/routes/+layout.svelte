@@ -10,6 +10,7 @@
 	import { onMount } from 'svelte';
 	import Login from '$lib/Components/Login.svelte';
 	import { user } from '/src/stores';
+	import { locale } from 'svelte-i18n';
 
 	// varibale to track loading state
 	let loading = true;

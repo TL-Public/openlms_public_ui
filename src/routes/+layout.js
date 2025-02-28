@@ -1,5 +1,6 @@
 import { error } from '@sveltejs/kit';
 import { String_Constants } from '/src/config/constants';
+import { browser } from '$app/environment';
 import '$lib/locals/i18n.js';
 import { locale, waitLocale } from 'svelte-i18n';
 export async function load({ fetch, data }) {
@@ -9,6 +10,10 @@ export async function load({ fetch, data }) {
 	locale.set(language ? language : 'en');
 
 	await waitLocale();
+
+	if (browser) {
+		locale.set(language ? language : 'en');
+	}
 
 	const fetchCoursesDetails = async () => {
 		try {

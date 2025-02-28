@@ -56,7 +56,7 @@
 
 <!-- top-20 comes from the height of header + its padding -->
 <div
-	class=" sm:hidden fixed w-full top-20 z-20 mx-0 flow-root h-full bg-white transition-all ease-in-out duration-500"
+	class=" md:hidden fixed w-full top-20 z-20 mx-0 flow-root h-full bg-white transition-all ease-in-out duration-500"
 	class:translate-x-0={burgerMenuOpen}
 	class:translate-x-full={!burgerMenuOpen}
 >
@@ -72,7 +72,7 @@
 						<div
 							class="flex items-center justify-center w-8 h-8 bg-orange-100 font-medium text-white capitalize text-xl rounded-full leading-none m-0 p-0"
 						>
-							{$user?.name ? $user.name[0] : 'D'}
+							{$user?.name ? $user.name[0] : ''}
 						</div>
 						<span>
 							Hi, <span class="font-medium">

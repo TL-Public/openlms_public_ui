@@ -93,12 +93,12 @@
 </script>
 
 <header
-	class=" h-16 sticky sm:relative sm:h-20 py-2 px-4 flex justify-between lg:py-2 lg:px-20 items-center bg-blue-10 text-darkGray shadow-md w-full z-50 top-0"
+	class=" h-16 sticky md:relative md:h-20 py-2 px-4 flex justify-between lg:py-2 lg:px-20 items-center bg-blue-10 text-darkGray shadow-md w-full z-50 top-0"
 >
 	<div on:click={handleLogoClick} on:keypress={handleLogoClick} role="button" tabindex="0">
 		<a href="/">
-			<span class="sr-only">Reap Logo</span>
-			<h1 class="hidden sm:block h-12">
+			<span class="sr-only">Edureach Logo</span>
+			<h1 class="hidden md:block h-12">
 				<EduReachLogo />
 			</h1>
 		</a>

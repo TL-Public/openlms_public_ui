@@ -31,7 +31,7 @@
 
 <div class="bg-primary">
 	<div
-		class=" flex w-full box-border h-[50vh] md:h-[65vh] max-h-[550px] overflow-hidden mt-16 bg-white80 sm:mt-0 2xl:max-w-7xl 2xl:mx-auto"
+		class=" flex w-full box-border h-[50vh] md:h-[65vh] max-h-[550px] overflow-hidden bg-white80 sm:mt-0 2xl:max-w-7xl 2xl:mx-auto"
 	>
 		<SingleAccordionSlider
 			img={{

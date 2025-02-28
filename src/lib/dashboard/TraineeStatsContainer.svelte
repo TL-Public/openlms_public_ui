@@ -5,25 +5,33 @@
 	import MapAndTableWrapper from '$lib/dashboard/MapAndTableWrapper.svelte';
 	import Top10VideosCardcopy from '$lib/dashboard/Top10VideosCardcopy.svelte';
 	import RegisteredTraineeChart from '$lib/dashboard/RegisteredTraineeChart.svelte';
-	import TraineeOnboardChart from './TraineeOnboardChart.svelte';
+	import TraineeOnboardChartCourseWise from '$lib/dashboard/TraineeOnboardChartCourseWise.svelte';
 	import UnregisteredTraineeChart from './UnregisteredTraineeChart.svelte';
 	import InsightsContainer from '$lib/dashboard/InsightsContainer.svelte';
 	import CategoryComparisionCard from '$lib/dashboard/CategoryComparisionCard.svelte';
 	import { formatNumberWithCommas } from '$lib/utils/helper.js';
 	import { format } from 'svelte-i18n';
 	import TraineeOnboardChartStateWise from '$lib/dashboard/TraineeOnboardChartStateWise.svelte';
+	import TraineeOnBoard10yearStateWise from '$lib/dashboard/TraineeOnBoard10yearStateWise.svelte';
+	import TraineeOnBoard10yearRsetiWise from '$lib/dashboard/TraineeOnBoard10yearRsetiWise.svelte';
+	import Histogram from '$lib/Components/Histogram.svelte';
+	import TrainedSettledComparison from '$lib/dashboard/TrainedSettledComparison.svelte';
 
 	export let historicalData;
 	export let lang;
 
 	const {
 		statesStatsData,
+		stateWiseTraineeOnboard,
+		traineeOnBoardTotal,
+		rsetiTraineeOnBoardData,
 		overallStats,
 		traineesByCourse,
 		courseList,
 		traineeStatsByCourseCategory,
 		traineesByState,
-		statesData
+		statesData,
+		rsetiList
 	} = historicalData;
 
 	let stateIDTrainee = '';
@@ -73,6 +81,7 @@
 	$: populateTableData(statesStatsData);
 	function populateTableData() {
 		const requiredData = statesStatsData[year];
+		if (!requiredData) return;
 		const mapDataArray = Object.values(requiredData).sort((a, b) => b.traineeCnt - a.traineeCnt);
 		tableDataTrainee = mapDataArray.map((data, index) => ({
 			rank: index + 1,
@@ -90,7 +99,7 @@
 
 <InsightsContainer {insightStats} />
 
-<div class=" mt-4 p-4 bg-white80 my-4 rounded-lg shadow-md min-h-[500px] mb-6">
+<div class=" mt-4 p-4 bg-white my-4 rounded min-h-[500px]">
 	<MapAndTableWrapper
 		stateID={stateIDTrainee}
 		stateName={stateNameTrainee}
@@ -105,14 +114,36 @@
 		placeholderForSearch={$format('SearchByState')}
 	/>
 </div>
+<div class="mb-6">
+	<TrainedSettledComparison {traineeOnBoardTotal} {lang} />
+</div>
+<div class="mb-6">
+	<TraineeOnBoard10yearStateWise
+		{traineesByState}
+		{statesData}
+		{lang}
+		{stateWiseTraineeOnboard}
+		{traineeOnBoardTotal}
+	/>
+</div>
+<div class="mb-6">
+	<TraineeOnBoard10yearRsetiWise
+		{traineesByState}
+		{statesData}
+		{lang}
+		{traineeOnBoardTotal}
+		{rsetiTraineeOnBoardData}
+		{rsetiList}
+	/>
+</div>
 
-<div class="mb-6 rounded-lg shadow-md">
+<div class="mb-6">
 	<CategoryComparisionCard {traineeStatsByCourseCategory} />
 </div>
-<div class="mb-6 rounded-lg shadow-md">
-	<TraineeOnboardChart {traineesByCourse} {courseList} {lang} />
+<div class="mb-6">
+	<TraineeOnboardChartCourseWise {traineesByCourse} {courseList} {lang} />
 </div>
-<div class="mb-6 rounded-lg shadow-md">
+<div class="mb-6">
 	<TraineeOnboardChartStateWise {traineesByState} {statesData} {lang} />
 </div>
 <!-- 

@@ -161,5 +161,11 @@
 	"NoTCFound": "No training centers found",
 	"NoStateFound": "No state found",
 	"SearchByVideoTitle": "Search by video title",
-	"Sorry! Failed to load video": "Sorry! Failed to load video."
+	"Sorry! Failed to load video": "Sorry! Failed to load video.",
+	"TraineesHistoricOnboardTrendStateLevel": "Trainee Onboard Trend (Historic)- State Level",
+	"RSETIHistoricOnboardTrendStateLevel": "Trainee Onboard Trend (Historic) - Training Center Level",
+	"Trained and Settled History": "Trainees -Trained v/s Settled Count",
+	"Settled Count": "Settled Count",
+	"Trained Count": "Trained Count"
+
 }

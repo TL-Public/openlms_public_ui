@@ -12,6 +12,9 @@
 
 	const {
 		statesStats,
+		stateWiseTraineeOnboard,
+		traineeOnBoardTotal,
+		rsetiTraineeOnBoardData,
 		overallStats,
 		traineesByCourse,
 		courseList,
@@ -19,6 +22,7 @@
 		coursesByState,
 		traineesByState,
 		stateData,
+		rsetiList,
 		lang
 	} = data;
 
@@ -47,7 +51,11 @@
 				traineeStatsByCourseCategory,
 				traineesByState,
 				statesData: stateData,
-				overallStats
+				overallStats,
+				stateWiseTraineeOnboard,
+				traineeOnBoardTotal,
+				rsetiTraineeOnBoardData,
+				rsetiList
 			},
 			lang: lang,
 			icon: '/traineesEnrolledIcon.svg'
@@ -86,7 +94,11 @@
 					traineeStatsByCourseCategory,
 					traineesByState,
 					statesData: stateData,
-					overallStats
+					overallStats,
+					stateWiseTraineeOnboard,
+					traineeOnBoardTotal,
+					rsetiTraineeOnBoardData,
+					rsetiList
 				},
 				icon: '/traineesEnrolledIcon.svg'
 			}

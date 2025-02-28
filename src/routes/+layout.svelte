@@ -17,11 +17,10 @@
 	$: loading = !!$navigating;
 
 	$: route = $page.url.pathname;
-	$: user.set(data?.user);
-	$: userInfo = data.user;
 	export let data;
 
 	onMount(() => {
+		user.set(data?.user)
 		if (route === '/') {
 			displayLoginPopUp = !data?.user?.isAuthenticated
 		}

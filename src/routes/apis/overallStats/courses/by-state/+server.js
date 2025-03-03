@@ -13,13 +13,15 @@ export async function GET() {
 		const data = await res.json();
 
 		if (data?.length === 0 || Object.keys(data)?.length === 0) {
-			throw new Error('No Data Found');
+			return new Response(JSON.stringify(data), {
+				status: 500,
+				headers: { 'Content-Type': 'application/json' }
+			});
 		}
-
 		return new Response(JSON.stringify(data), {
-			status: 500,
 			headers: { 'Content-Type': 'application/json' }
 		});
+		
 	} catch (error) {
 		return new Response(JSON.stringify({ error: error.message }), {
 			status: res.status,

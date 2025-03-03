@@ -127,6 +127,8 @@
 							? extractYouTubeVideoId(courseDetails.aboutVideoUrl)
 							: 'null'}
 					/>
+					{:else}
+					<img src={courseDetails.imageUrl} alt="course thumbnail" class="rounded-lg grayscale" />
 				{/if}
 			</div>
 		</div>

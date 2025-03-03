@@ -154,7 +154,7 @@
 						<!-- Render image taking the full height of the card -->
 						<div class="flex items-center">
 							<img
-								class="h-full w-24 rounded-l-md object-cover"
+								class="h-full w-24 rounded-l-md object-cover grayscale"
 								src={data?.imageUrl}
 								alt={'image of a course'}
 							/>

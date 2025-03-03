@@ -70,7 +70,7 @@
 				{#if $user?.name}
 					<li class=" w-full flex gap-4 items-center mt-auto h-16 border-b pl-4">
 						<div
-							class="flex items-center justify-center w-8 h-8 bg-orange-100 font-medium text-white capitalize text-xl rounded-full leading-none m-0 p-0"
+							class="flex items-center justify-center w-8 h-8 bg-[#2E5ED4] font-medium text-white capitalize text-xl rounded-full leading-none m-0 p-0"
 						>
 							{$user?.name ? $user.name[0] : ''}
 						</div>

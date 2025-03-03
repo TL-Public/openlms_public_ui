@@ -98,8 +98,9 @@
 	<div on:click={handleLogoClick} on:keypress={handleLogoClick} role="button" tabindex="0">
 		<a href="/">
 			<span class="sr-only">Edureach Logo</span>
-			<h1 class="hidden md:block h-12">
-				<EduReachLogo />
+
+			<h1 class="flex items-center justify-center ">
+			<img src="/eduReachSmallLogo.svg" alt="" class="h-6 md:h-8 lg:h-12 ">
 			</h1>
 		</a>
 	</div>
@@ -128,7 +129,7 @@
 						on:click={() => (showProfilePopup = !showProfilePopup)}
 					>
 						<div
-							class="flex items-center justify-center w-8 h-8 bg-orange-100 font-medium text-white capitalize text-xl rounded-full leading-none m-0 p-0"
+							class="flex items-center justify-center w-8 h-8 bg-[#2E5ED4] font-medium text-white capitalize text-xl rounded-full leading-none m-0 p-0"
 						>
 							{$user?.name ? $user?.name[0] : ''}
 						</div>

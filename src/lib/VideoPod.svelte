@@ -33,7 +33,7 @@
 				<img
 					src={video?.thumbnail ? video?.thumbnail : '/image-preview-icon.jpg'}
 					alt="thumbnail of the course"
-					class="w-1/3 rounded-md rounded-r-none object-cover"
+					class="w-1/3 rounded-md rounded-r-none object-cover grayscale"
 					on:error={(event) => (event.target.src = '/image-preview-icon.jpg')}
 				/>
 				<div class="flex flex-col gap-2 sm:gap-3 p-2 sm:p-4 justify-between w-2/3">

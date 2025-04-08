@@ -2,6 +2,7 @@
 	import { createEventDispatcher } from 'svelte';
 	import { _ } from 'svelte-i18n';
 	import ErrorComponent from '$lib/Components/ErrorComponent.svelte';
+	import { Course_Sorting_Order } from '/src/config/constants.js';
 
 	export let notFoundMessage = 'Not found';
 	export let datatableCardConfig = {
@@ -32,38 +33,38 @@
 	function handleSorting(data, sortOption) {
 		let sortedData = Array.from(data);
 		switch (sortOption) {
-			case $_('ChapterCountLowToHigh'):
+			case Course_Sorting_Order.CHAPTERCNT_LOW_TO_HIGH:
 				sortedData.sort((a, b) => a.numberOfChapters - b.numberOfChapters);
 				break;
-			case $_('ChapterCountHighToLow'):
+			case Course_Sorting_Order.CHAPTERCNT_HIGH_TO_LOW:
 				sortedData.sort((a, b) => b.numberOfChapters - a.numberOfChapters);
 				break;
-			case $_('DurationLowtoHigh'):
+			case Course_Sorting_Order.DURATION_LOW_TO_HIGH:
 				sortedData.sort((a, b) => a.duration - b.duration);
 				break;
-			case $_('DurationHighToLow'):
+			case Course_Sorting_Order.DURATION_HIGH_TO_LOW:
 				sortedData.sort((a, b) => b.duration - a.duration);
 				break;
-			case $_('Title ( A to Z )'):
+			case Course_Sorting_Order.TITLE_A_TO_Z:
 				sortedData.sort(
 					(a, b) => a?.title?.localeCompare(b?.title) || a?.name?.localeCompare(b.name)
 				);
 				break;
-			case $_('TitleZtoA'):
+			case Course_Sorting_Order.TITLE_Z_TO_A:
 				sortedData.sort(
 					(a, b) => b?.title?.localeCompare(a.title) || b?.name?.localeCompare(a.name)
 				);
 				break;
-			case $_('PlannedDateLowToHigh'):
+			case Course_Sorting_Order.PLANNED_DATE_LOW_TO_HIGH:
 				sortedData.sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
 				break;
-			case $_('PlannedDateHighToLow'):
+			case Course_Sorting_Order.PLANNED_DATE_HIGH_TO_LOW:
 				sortedData.sort((a, b) => new Date(b.startDate) - new Date(a.startDate));
 				break;
-			case $_('PlannedCoursesLowToHigh'):
+			case Course_Sorting_Order.PLANNED_COURSES_LOW_TO_HIGH:
 				sortedData.sort((a, b) => a.courseCount - b.courseCount);
 				break;
-			case $_('PlannedCoursesHighToLow'):
+			case Course_Sorting_Order.PLANNED_COURSES_HIGH_TO_LOW:
 				sortedData.sort((a, b) => b.courseCount - a.courseCount);
 				break;
 			default:
@@ -153,7 +154,7 @@
 						<!-- Render image taking the full height of the card -->
 						<div class="flex items-center">
 							<img
-								class="h-full w-24 rounded-l-md object-cover"
+								class="h-full w-24 rounded-l-md object-cover grayscale"
 								src={data?.imageUrl}
 								alt={'image of a course'}
 							/>
@@ -173,12 +174,12 @@
 
 					<div class="py-2 flex flex-col gap-2 relative flex-1">
 						<h2 class="text-sm font-semibold text-darkGray line-clamp-2">
-							{data[cardHeaderDisplay.title?.key] || ''}
+							{data[cardHeaderDisplay.title?.key] ?? ''}
 						</h2>
 						{#each cardHeaderDisplay?.nonTitleData ?? [] as key, index (index)}
-							<h4 class="text-xs text-darkGray">
-								{key.name}: <span class="font-semibold">{data[key.key] || '-'}</span>
-							</h4>
+							<p class="text-xs text-darkGray {key.highlight ? 'font-bold' : 'font-medium'}">
+								{key.name}: <span>{data[key.key] ?? '-'}</span>
+							</p>
 						{/each}
 					</div>
 				</div>

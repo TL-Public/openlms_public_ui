@@ -1,10 +1,11 @@
 import { json } from '@sveltejs/kit';
+import { BASE_URL } from '$lib/config';
 
 export async function GET({ params }) {
 	let res;
 	try {
 		res = await fetch(
-			`http://read-admin-api-dev.ap-south-1.elasticbeanstalk.com/apis/v1/stats/rsetis/${params.id}`
+			`${BASE_URL}/apis/v1/stats/rsetis/${params.id}`
 		);
 
 		if (res.status != 200 || !res.ok) {

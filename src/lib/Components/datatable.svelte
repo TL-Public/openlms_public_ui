@@ -469,7 +469,7 @@
 									class:py-3={rowHeight === 'normal'}
 									class:py-4={rowHeight === 'medium'}
 								>
-									<span class="sr-only">Action</span>
+									<!-- <span class="sr-only">Action</span> -->
 								</th>
 							</tr>
 						</thead>

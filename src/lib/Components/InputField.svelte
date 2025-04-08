@@ -20,7 +20,7 @@
 <div>
 	<label for="input" class="block text-xs {labelFontWeight}  leading-6 text-gray-900">{label}</label
 	>
-	<div>
+	<div class="relative">
 		<input
 			{type}
 			{name}
@@ -34,5 +34,8 @@
 			{disabled}
 			{...$$restProps}
 		/>
+		<div class="absolute inset-y-0 right-3 flex items-center h-full pointer-events-auto">
+			<slot></slot>
+		</div>
 	</div>
 </div>

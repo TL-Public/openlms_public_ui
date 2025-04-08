@@ -1,9 +1,10 @@
 import { json } from '@sveltejs/kit';
+import { BASE_URL } from '$lib/config';
 
 export async function GET() {
 	let res;
 	try {
-		let endPoint = 'http://read-admin-api-dev.ap-south-1.elasticbeanstalk.com/apis/v1/courses';
+		let endPoint = `${BASE_URL}/apis/v1/courses`;
 
 		res = await fetch(endPoint);
 		if (!res.ok || res.status !== 200) {

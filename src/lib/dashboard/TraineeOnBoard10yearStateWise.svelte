@@ -1,16 +1,14 @@
 <script>
-	import { monthNames } from '$lib/data.js';
 	import Dropdown from '$lib/Components/Dropdown.svelte';
 	import LineChart from '$lib/Components/LineChart.svelte';
 	import ErrorComponent from '$lib/Components/ErrorComponent.svelte';
 	import { format } from 'svelte-i18n';
 	import Filter from '$lib/Components/Filter.svelte';
-
-	export let traineesByCourse = []; // Incoming data in the specified format
-	export let courseList = []; // Course list
+	export let statesData = []; // State list
 	export let lang = 'en';
-
-	let selectedCourse = 'All'; // Default selection
+	export let stateWiseTraineeOnboard = [];
+	export let traineeOnBoardTotal = [];
+	let selectedState = -1; // Default selection
 	let labels = [];
 	let data = [];
 	let chartData = {
@@ -29,7 +27,6 @@
 			}
 		]
 	};
-
 	let chartOptions = {
 		responsive: true,
 		maintainAspectRatio: false,
@@ -37,7 +34,7 @@
 			x: {
 				title: {
 					display: true,
-					text: $format('Month'),
+					text: $format('Year'),
 					color: '#143164',
 					font: () => ({
 						size: window.matchMedia('(max-width: 768px)').matches ? 10 : 12,
@@ -91,45 +88,47 @@
 			}
 		}
 	};
-
 	let error = null;
-	$: if (traineesByCourse?.status !== 200) {
-		error = traineesByCourse.error || 'Failed to fetch data';
-	} else if (traineesByCourse?.data?.length === 0) {
-		error = 'No data found';
-	} else {
+	// $: if (stateWiseTraineeOnboard?.status !== 200) {
+	// 	error = stateWiseTraineeOnboard.error || 'Failed to fetch data';
+	// } else if (stateWiseTraineeOnboard?.length === 0) {
+	// 	error = 'No data found';
+	// } else {
+	// 	error = null;
+	// }
+	function updateChart(stateId) {
+		selectedState = Number(stateId);
+		// Clear previous error
 		error = null;
-	}
-
-	function updateChart(courseCode) {
-		selectedCourse = courseCode;
-
-		if (error) return;
-		if (traineesByCourse?.data?.length === 0) {
-			error = 'No data found';
+		// if (!stateWiseTraineeOnboard || stateWiseTraineeOnboard?.length === 0) {
+		// 	error = 'No data found';
+		// 	return;
+		// }
+		// Handle filtering
+		let filteredData =
+			stateId === Number(-1)
+				? traineeOnBoardTotal
+				: stateWiseTraineeOnboard?.filter((item) => item.id == parseInt(stateId));
+		filteredData = filteredData?.sort((a, b) => a.year - b.year);
+		if (!filteredData || filteredData.length === 0) {
+			error =
+				stateId === -1
+					? 'No data found' // No data for all states
+					: 'No data found for the selected state'; // No data for a specific state
 			return;
 		}
-
-		let filteredData =
-			courseCode === 'All'
-				? traineesByCourse.data
-				: traineesByCourse.data?.filter((item) => item.course_code === courseCode);
-
-		if (filteredData?.length === 0) {
-			error = 'No data found for the selected course';
-		}
-		// Prepare chart data
-		const transformed = {};
-		filteredData.forEach(({ mnth, total_trainees }) => {
-			const monthName = monthNames[mnth - 1];
-			if (!transformed[monthName]) {
-				transformed[monthName] = 0;
+		// Transform data
+		const allYears = {};
+		const traineesCnt = [];
+		filteredData.forEach(({ year, trainedCount }) => {
+			if (!allYears[year]) {
+				allYears[year] = year;
 			}
-			transformed[monthName] = transformed[monthName] + total_trainees;
+			traineesCnt.push(trainedCount);
 		});
-		labels = Object.keys(transformed);
-		data = Object.values(transformed);
-
+		labels = Object.keys(allYears); // Month names
+		data = traineesCnt; // Trainee counts
+		// Update chart data
 		chartData = {
 			labels,
 			datasets: [
@@ -143,35 +142,34 @@
 			]
 		};
 	}
-
-	// Initialize chart with all courses
-	updateChart('All');
+	updateChart(-1);
 	// Generate course options
-	let allCourses = $format('AllCourses');
-	let courseOptions = [
-		{ id: 'All', name: allCourses },
-		...courseList
-			.map((course) => ({
-				id: course.courseCode,
-				name: course.translations.find((t) => t.languageCode === lang)?.title || course.courseCode
-			}))
-			.sort((a, b) => a.name.localeCompare(b.name))
-	];
+	let stateOptions = statesData
+		.map((states) => ({
+			id: states.extId,
+			name: states?.name || states?.title
+		}))
+		.sort((a, b) => {
+			if (Number(a.id) === -1) return -1; // Ensure "All States" comes first
+			if (Number(b.id) === -1) return 1; // Move "All States" above others
+			return a.name.localeCompare(b.name); // Sort the rest alphabetically
+		});
 </script>
-
-<div class="bg-white80 w-full flex flex-col py-4 md:py-8 px-4 md:px-16 rounded-lg">
+<div class="bg-white w-full flex flex-col py-4 md:py-8 px-4 md:px-16 rounded-lg">
 	<div class="flex flex-col md:flex-row justify-between gap-2 md:gap-0">
 		<div>
-			<h3 class="text-base font-bold text-primary">{$format('TraineesOnboardTrendCourseLevel')}</h3>
+			<h3 class="text-base font-bold text-primary">
+				{$format('TraineesHistoricOnboardTrendStateLevel')}
+			</h3>
 		</div>
 		<div class="flex gap-4 items-start md:items-center w-40 md:w-48">
 			<Filter
-				optionList={courseOptions}
+				optionList={stateOptions}
 				optionListConfigObject={{ optionNameKey: 'name', optionIdKey: 'id' }}
-				itemSelected={courseOptions[0].name}
+				itemSelected={stateOptions[0]?.name}
 				on:filterItemSelected={(e) => {
 					error = null;
-					updateChart(e.detail.id);
+					updateChart(Number(e.detail.id));
 				}}
 			/>
 		</div>

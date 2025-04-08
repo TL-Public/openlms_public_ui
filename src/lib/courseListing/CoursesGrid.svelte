@@ -5,6 +5,7 @@
 	import CourseCardSkeleton from '$lib/courseListing/CourseCardSkeleton.svelte';
 	import { format } from 'svelte-i18n';
 	import { _ } from 'svelte-i18n';
+	import { Course_Sorting_Order } from '/src/config/constants.js';
 
 	export let sideBarCategory;
 	export let searchValue;
@@ -53,41 +54,41 @@
 	function sortCourses(courses, sortCriteria) {
 		let arrayToSort = Array.from(courses);
 		switch (sortCriteria) {
-			case $_('ChapterCountLowToHigh'):
+			case Course_Sorting_Order.CHAPTERCNT_LOW_TO_HIGH:
 				return arrayToSort?.sort((a, b) => {
 					return a?.numberOfChapters - b?.numberOfChapters;
 				});
-			case $_('ChapterCountHighToLow'):
+			case Course_Sorting_Order.CHAPTERCNT_HIGH_TO_LOW:
 				return arrayToSort?.sort((a, b) => {
 					return b?.numberOfChapters - a?.numberOfChapters;
 				});
-			case $_('DurationLowtoHigh'):
+			case Course_Sorting_Order.DURATION_LOW_TO_HIGH:
 				return arrayToSort?.sort((a, b) => {
 					return a?.duration - b?.duration;
 				});
-			case $_('DurationHighToLow'):
+			case Course_Sorting_Order.DURATION_HIGH_TO_LOW:
 				return arrayToSort?.sort((a, b) => {
 					return b?.duration - a?.duration;
 				});
 
-			case $_('Title ( A to Z )'):
+			case Course_Sorting_Order.TITLE_A_TO_Z:
 				return arrayToSort?.sort((a, b) => {
 					return a?.title?.localeCompare(b?.title);
 				});
 
-			case $_('TitleZtoA'):
+			case Course_Sorting_Order.TITLE_Z_TO_A:
 				return arrayToSort?.sort((a, b) => {
 					return b?.title?.localeCompare(a?.title);
 				});
 
-			case $_('PlannedDateLowToHigh'):
+			case Course_Sorting_Order.PLANNED_DATE_LOW_TO_HIGH:
 				return arrayToSort?.sort((a, b) => {
 					const dateA = a?.startDate;
 					const dateB = b?.startDate;
 					return dateA - dateB;
 				});
 
-			case $_('PlannedDateHighToLow'):
+			case Course_Sorting_Order.PLANNED_DATE_HIGH_TO_LOW:
 				return arrayToSort?.sort((a, b) => {
 					const dateA = a?.startDate;
 					const dateB = b?.startDate;

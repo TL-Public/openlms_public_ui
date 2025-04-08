@@ -3,6 +3,7 @@
 	import Quote from '$lib/courseListing/Quote.svelte';
 	import BreadCrumbs from '$lib/breadCrumbs/BreadCrumbs.svelte';
 	import { _ } from 'svelte-i18n';
+	import ErrorMessage from '$lib/courses/ErrorMessage.svelte'
 
 	export let route;
 	export let params;
@@ -31,5 +32,9 @@
 </div>
 
 <div class="md:mx-4 lg:mx-[92px] xl:m-0">
+	{#if allCoursesData?.length >0}
 	<CourseListMainSection {category} coursesCopy={allCoursesData} />
+	{:else}
+	<ErrorMessage />
+	{/if}
 </div>

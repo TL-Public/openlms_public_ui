@@ -1,10 +1,11 @@
 import { json } from '@sveltejs/kit';
+import { BASE_URL } from '$lib/config';
 
 // API to get list of all states
 export async function GET() {
 	let res;
 	try {
-		res = await fetch(`http://read-admin-api-dev.ap-south-1.elasticbeanstalk.com/apis/v1/states`);
+		res = await fetch(`${BASE_URL}/apis/v1/states`);
 
 		if (!res.ok || res.status !== 200) {
 			throw new Error('Failed to fetch states data');

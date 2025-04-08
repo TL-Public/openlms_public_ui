@@ -12,6 +12,9 @@
 
 	const {
 		statesStats,
+		stateWiseTraineeOnboard,
+		traineeOnBoardTotal,
+		rsetiTraineeOnBoardData,
 		overallStats,
 		traineesByCourse,
 		courseList,
@@ -19,6 +22,7 @@
 		coursesByState,
 		traineesByState,
 		stateData,
+		rsetiList,
 		lang
 	} = data;
 
@@ -26,6 +30,15 @@
 	let params = $page.params;
 
 	let tabs = [
+		{
+			text: 'Course Stats',
+			component: CourseStatsContainer,
+			clicked: false,
+			textDispaly: $format('CourseStats'),
+			historicalData: { coursesByState, overallStats },
+			lang: lang,
+			icon: '/coursesIcon.svg'
+		},
 		{
 			text: 'Trainee Stats',
 			component: TraineeStatsContainer,
@@ -38,19 +51,14 @@
 				traineeStatsByCourseCategory,
 				traineesByState,
 				statesData: stateData,
-				overallStats
+				overallStats,
+				stateWiseTraineeOnboard,
+				traineeOnBoardTotal,
+				rsetiTraineeOnBoardData,
+				rsetiList
 			},
 			lang: lang,
 			icon: '/traineesEnrolledIcon.svg'
-		},
-		{
-			text: 'Course Stats',
-			component: CourseStatsContainer,
-			clicked: false,
-			textDispaly: $format('CourseStats'),
-			historicalData: { coursesByState, overallStats },
-			lang: lang,
-			icon: '/coursesIcon.svg'
 		}
 		// {
 		// 	text: 'Assessment',
@@ -67,6 +75,14 @@
 	function setTabsData() {
 		tabs = [
 			{
+				text: 'Course Stats',
+				component: CourseStatsContainer,
+				clicked: false,
+				textDispaly: $format('CourseStats'),
+				historicalData: { coursesByState, overallStats },
+				icon: '/coursesIcon.svg'
+			},
+			{
 				text: 'Trainee Stats',
 				component: TraineeStatsContainer,
 				clicked: false,
@@ -78,17 +94,13 @@
 					traineeStatsByCourseCategory,
 					traineesByState,
 					statesData: stateData,
-					overallStats
+					overallStats,
+					stateWiseTraineeOnboard,
+					traineeOnBoardTotal,
+					rsetiTraineeOnBoardData,
+					rsetiList
 				},
 				icon: '/traineesEnrolledIcon.svg'
-			},
-			{
-				text: 'Course Stats',
-				component: CourseStatsContainer,
-				clicked: false,
-				textDispaly: $format('CourseStats'),
-				historicalData: { coursesByState, overallStats },
-				icon: '/coursesIcon.svg'
 			}
 			// {
 			// 	text: 'Assessment',

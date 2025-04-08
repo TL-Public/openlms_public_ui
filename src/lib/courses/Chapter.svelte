@@ -56,8 +56,8 @@
 >
 	<!-- <h3>{$format('Chapter')} {index + 1}. {chapterData?.title}</h3> -->
 	<h3 class="font-semibold">
-		{$format('Chapter')}
-		{index + 1} :
+		<!-- {$format('Chapter')}
+		{index + 1} : -->
 		<span class="sm:font-semibold font-normal">
 			{chapterData?.title ?? '-'}
 		</span>

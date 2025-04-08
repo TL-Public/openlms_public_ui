@@ -10,7 +10,7 @@
 	import { _ } from 'svelte-i18n';
 	import YoutubePlayer from '$lib/Components/YoutubePlayer.svelte';
 	import { page } from '$app/stores';
-	import { categoryList as courseCategoryList } from '$lib/temp.admin.js';
+	import { categoryList as courseCategoryList } from '$lib/data.js';
 	import { extractYouTubeVideoId } from '$lib/utils/helper.js';
 
 	export let params;
@@ -28,7 +28,7 @@
 	let loading = false;
 
 	function setTotalVideoDuration() {
-		if (Object.keys(courseStats)?.length === 0) return;
+		// if (Object.keys(courseStats)?.length === 0) return;
 		courseStatsDetails = [
 			{
 				statName: 'Chapters',
@@ -42,7 +42,7 @@
 			},
 			{
 				statName: 'CourseDuration',
-				statValue: courseStats?.courseDuration + ' ' + $_('Days'),
+				statValue: courseStats?.courseDuration? courseStats?.courseDuration + ' ' + $_('Days') : null,
 				iconSvg: '/courseDurationIcon.svg'
 			},
 			{
@@ -92,7 +92,7 @@
 						<p class="text-sm mb-4 md:mb-4 sm:mb-3 font-semibold">
 							{$_('CourseId')}:
 							<span class="capitalize">
-								{courseDetails?.courseCode ?? ''}
+								{courseDetails?.displayCourseCode ?? ''}
 							</span>
 						</p>
 					</div>
@@ -127,6 +127,8 @@
 							? extractYouTubeVideoId(courseDetails.aboutVideoUrl)
 							: 'null'}
 					/>
+					{:else}
+					<img src={courseDetails.imageUrl} alt="course thumbnail" class="rounded-lg grayscale" />
 				{/if}
 			</div>
 		</div>

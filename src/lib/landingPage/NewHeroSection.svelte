@@ -22,7 +22,7 @@
 
 			<a
 				href="/courses"
-				class="inline-flex items-center justify-center px-8 py-3 bg-secondary text-base text-white font-semibold rounded-md hover:bg-[#1d4ed8] transition-colors duration-200 w-fit"
+				class="inline-flex items-center justify-center px-8 py-3 bg-secondary text-base text-white font-semibold rounded-md hover:bg-[#1d4ed8] transition-colors duration-200 w-fit self-center md:self-start"
 			>
 				Explore Courses
 			</a>

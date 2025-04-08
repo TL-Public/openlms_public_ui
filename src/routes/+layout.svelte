@@ -9,6 +9,8 @@
 	import { navigating } from '$app/stores';
 	import { onMount } from 'svelte';
 	import Login from '$lib/Components/Login.svelte';
+	import { user } from '/src/stores';
+	import { locale } from 'svelte-i18n';
 
 	// varibale to track loading state
 	let loading = true;
@@ -19,8 +21,9 @@
 	export let data;
 
 	onMount(() => {
+		user.set(data?.user)
 		if (route === '/') {
-			displayLoginPopUp = true;
+			displayLoginPopUp = !data?.user?.isAuthenticated
 		}
 	});
 </script>

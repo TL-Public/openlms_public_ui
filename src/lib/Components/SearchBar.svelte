@@ -78,7 +78,7 @@
 		<!-- Clear Button -->
 		{#if searchBoxValue}
 			<button
-				class="absolute right-4 top-1/2 transform -translate-y-1/2 hover:text-orange-400 text-sm text-orange-100"
+				class="absolute right-4 top-1/2 transform -translate-y-1/2 hover:text-[#37388A] text-sm text-[#1E1F53]"
 				on:click={clearSearch}
 			>
 				&#x2715;

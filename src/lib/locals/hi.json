@@ -160,5 +160,12 @@
 	"NoVideosFound": "कोई वीडियो नहीं हैं",
 	"NoTCFound": "कोई प्रशिक्षण केंद्र नहीं हैं",
 	"NoStateFound": "कोई राज्य नहीं हैं",
-	"SearchByVideoTitle": "वीडियो शीर्षक से खोजें"
+	"SearchByVideoTitle": "वीडियो शीर्षक से खोजें",
+	"Sorry! Failed to load video": "क्षमा करें! वीडियो लोड करने में विफल",
+	"TraineesHistoricOnboardTrendStateLevel": "प्रशिक्षुओं का ऐतिहासिक ऑनबोर्ड ट्रेंड - राज्य स्तर",
+	"RSETIHistoricOnboardTrendStateLevel": "प्रशिक्षुओं का ऐतिहासिक ऑनबोर्ड ट्रेंड - प्रशिक्षण केंद्र स्तर",
+	"Trained and Settled History": "प्रशिक्षार्थी - प्रशिक्षित बनाम निपटाए गए संख्या",
+	"Settled Count": "स्थायी संख्या",
+	"Trained Count": "प्रशिक्षित संख्या"
+
 }

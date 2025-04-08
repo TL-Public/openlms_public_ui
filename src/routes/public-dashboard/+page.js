@@ -5,6 +5,7 @@ export async function load({ fetch, parent }) {
 
 	const lang = parentData?.lang ? parentData.lang : 'en';
 	const stateList = parentData.stateData ? parentData.stateData : [];
+	const rsetiList = parentData.allCentersMap ? Object.values(parentData.allCentersMap) : [];
 
 	const hashmapOfStates = stateList.reduce((acc, item) => {
 		acc[item.extId] = item; // Use extId as the key and the entire object as value
@@ -12,15 +13,17 @@ export async function load({ fetch, parent }) {
 	}, {});
 
 	async function fetchStatsStates() {
+		let extractedTotalTraineeData = {};
+		let data = [];
 		try {
 			// get overall data of states from api
 			const statsResp = await fetch(`/apis/overallStats/trainees/by-state`);
 			if (!statsResp.ok) {
 				return [];
 			}
-			let extractedTotalTraineeData = {};
+
 			if (statsResp.status == 200) {
-				let data = await statsResp.json();
+				data = await statsResp.json();
 				// for each element in the data from api
 				// make a map of state to data and aggrigate data of multiple years of a state
 
@@ -46,12 +49,11 @@ export async function load({ fetch, parent }) {
 					}
 				});
 
-				return extractedTotalTraineeData;
+				return { statesStats: extractedTotalTraineeData, stateWiseTraineeOnboard: data };
 			}
-			return [];
+			return { statesStats: extractedTotalTraineeData, stateWiseTraineeOnboard: data };
 		} catch (err) {
-			console.log('Error in fetching states stats: ', err.message);
-			return [];
+			return { statesStats: extractedTotalTraineeData, stateWiseTraineeOnboard: data };
 		}
 	}
 
@@ -88,6 +90,10 @@ export async function load({ fetch, parent }) {
 			}
 			if (res.status === 200) {
 				let data = await res.json();
+
+				if (data?.length === 0) {
+					throw new Error('No data found');
+				}
 				return { data, status: 200 };
 			}
 		} catch (err) {
@@ -163,14 +169,59 @@ export async function load({ fetch, parent }) {
 		}
 	}
 
+	async function fetchTraineeOnBoardTotal() {
+		let res;
+		try {
+			res = await fetch(`/apis/overallStats/grand-totals`);
+			if (!res.ok) {
+				throw new Error('Failed to fetch data');
+			}
+			if (res.status !== 200) {
+				throw new Error('Failed to fetch data');
+			}
+			if (res.status === 200) {
+				let data = await res.json();
+
+				return data;
+			}
+		} catch (err) {
+			return [];
+		}
+	}
+	async function fetchHistoricRsetiTraineeOnBoard() {
+		let res;
+		try {
+			res = await fetch(`/apis/overallStats/rsetis`);
+			if (!res.ok) {
+				throw new Error('Failed to fetch data');
+			}
+			if (res.status !== 200) {
+				throw new Error('Failed to fetch data');
+			}
+			if (res.status === 200) {
+				let data = await res.json();
+
+				return { data, status: 200 };
+			}
+		} catch (err) {
+			return { data: [], error: err.message, status: res?.status || 500 };
+		}
+	}
+
+	const { statesStats, stateWiseTraineeOnboard } = await fetchStatsStates();
+
 	return {
-		statesStats: await fetchStatsStates(),
+		stateWiseTraineeOnboard: stateWiseTraineeOnboard,
+		statesStats: statesStats,
+		traineeOnBoardTotal: await fetchTraineeOnBoardTotal(),
+		rsetiTraineeOnBoardData: await fetchHistoricRsetiTraineeOnBoard(),
 		overallStats: await fetchStats(),
 		traineeStatsByCourseCategory: await fetchTraineeStatsByCourseCategory(),
 		traineesByCourse: await fetchTraineesByCourse(),
 		traineesByState: await fetchTraineesByState(),
 		coursesByState: await fetchCoursesByState(),
 		courseList: parentData?.allCoursesData ? parentData.allCoursesData : [],
+		rsetiList: rsetiList,
 		lang
 	};
 }

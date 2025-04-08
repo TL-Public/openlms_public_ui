@@ -78,7 +78,7 @@
 			x: {
 				title: {
 					display: true,
-					text: $format('Year'),
+					text: $format('Month'),
 					color: '#143164',
 					font: () => ({
 						size: window.matchMedia('(max-width: 768px)').matches ? 10 : 12,

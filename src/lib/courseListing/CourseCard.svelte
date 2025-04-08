@@ -1,7 +1,7 @@
 <script>
 	import CourseCardSkeleton from '$lib/courseListing/CourseCardSkeleton.svelte';
 	import { formatDurationHHMM } from '$lib/utils/helper.js';
-	import { categoryList } from '$lib/temp.admin.js';
+	import { categoryList } from '$lib/data.js';
 	import { _ } from 'svelte-i18n';
 	import { formatDateMMMYYYY } from '$lib/utils/helper.js';
 	import GoogleMatrialIcon from '$lib/Components/GoogleMatrialIcon.svelte';
@@ -46,7 +46,7 @@
 					{$_('Chapters')} : {numberOfChapters}</span
 				>
 				{#if showPlannedDate}
-					<span class="text-xs flex items-center gap-1">
+					<span class="text-xs flex items-center gap-1 font-medium">
 						<img src="/calendar.svg" alt="" />
 
 						{$_('PlannedDate')} : {formatDateMMMYYYY(

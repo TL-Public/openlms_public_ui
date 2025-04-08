@@ -1,28 +1,29 @@
 import { json } from '@sveltejs/kit';
+import { BASE_URL } from '$lib/config';
 
 // API to get list of all RSETIs
 export async function GET({ locals }) {
 	let res;
-	const lang = locals.lang || 'en';
+	const lang = locals?.lang || 'en';
 	try {
-		res = await fetch(`http://read-admin-api-dev.ap-south-1.elasticbeanstalk.com/apis/v1/rsetis`);
+		res = await fetch(`${BASE_URL}/apis/v1/rsetis`);
 
-		if (res.status != 200 || !res.ok) {
+		if (res?.status != 200 || !res?.ok) {
 			throw new Error('Failed to fetch data');
 		}
-		const data = await res.json();
+		const data = await res?.json();
 
 		if (data?.length === 0 || Object.keys(data)?.length === 0) {
 			throw new Error('No Data Found');
 		}
 
 		let rsetiData = [];
-		data.forEach((item) => {
-			if (item.translations.length > 0) {
-				const languageData = item.translations.find((langData) => langData.languageCode === lang);
-				const enData = item.translations.find((langData) => langData.languageCode === 'en');
+		data?.forEach((item) => {
+			if (item?.translations?.length > 0) {
+				const languageData = item?.translations?.find((langData) => langData?.languageCode === lang);
+				const enData = item?.translations?.find((langData) => langData?.languageCode === 'en');
 				if (languageData) {
-					rsetiData.push({
+					rsetiData?.push({
 						...item,
 						name: languageData.name,
 						address: languageData.address,

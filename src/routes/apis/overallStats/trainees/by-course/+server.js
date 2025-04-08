@@ -1,8 +1,10 @@
+import { BASE_URL } from '$lib/config';
+
 export async function GET() {
 	let res;
 	try {
 		res = await fetch(
-			`http://read-admin-api-dev.ap-south-1.elasticbeanstalk.com/apis/v1/historic-data-monthwise/trainee-count-by-courses`
+			`${BASE_URL}/apis/v1/historic-data-monthwise/trainee-count-by-courses`
 		);
 
 		if (!res.ok || res.status !== 200) {
@@ -11,7 +13,10 @@ export async function GET() {
 		const data = await res.json();
 
 		if (data?.length === 0 || Object.keys(data)?.length === 0) {
-			throw new Error('No Data Found');
+			return new Response(JSON.stringify(data), {
+				status: 500,
+				headers: { 'Content-Type': 'application/json' }
+			});
 		}
 
 		return new Response(JSON.stringify(data), {

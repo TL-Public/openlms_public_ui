@@ -1,8 +1,10 @@
+import { BASE_URL } from '$lib/config';
+
 export async function GET({ params, request }) {
 	let res;
 	try {
 		let queryparams = request.url.split('?');
-		let endPoint = `http://read-admin-api-dev.ap-south-1.elasticbeanstalk.com/apis/v1/courses/${params.id}`;
+		let endPoint = `${BASE_URL}/apis/v1/courses/${params.id}`;
 		if (queryparams?.length > 1) {
 			endPoint += '?' + queryparams[1];
 		}

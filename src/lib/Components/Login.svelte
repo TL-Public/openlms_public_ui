@@ -10,6 +10,8 @@
 	import Filter from '$lib/Components/Filter.svelte';
 	import { format } from 'svelte-i18n';
 	import EduReachHalfLogo from '$lib/svgComponents/EduReach-half-Logo.svelte';
+	import { user } from '/src/stores';
+	import Spinner from '$lib/Components/Spinner.svelte';
 
 	export let centersData;
 	export let form;
@@ -17,9 +19,12 @@
 
 	let dropdownError = '';
 	let error = null;
+	let showPassword = false;
 	let formLoginDetails = form?.loginDetails;
+	let loggingIn = false;
 
 	let rsetiFilterOptionList = [{ name: $format('SelectRSETI'), uuid: 0 }, ...centersData];
+
 
 	let rsetiFilterValue = rsetiFilterOptionList[0]?.name;
 
@@ -47,11 +52,12 @@
 			cancel(); // Prevent form submission
 			return;
 		}
+		loggingIn = true;
 		formData.set('rseti', rsetiFilterValue);
 		return async ({ result, update }) => {
 			await result;
 
-			if (result?.error) {
+			if (result?.type === 'failure') {
 				if (result?.status === 500) {
 					error = $format('UnexpectedErrorMessage');
 				} else if (result?.status === 401) {
@@ -60,9 +66,17 @@
 					error = $format('UnexpectedErrorMessage'); // Handles unknown errors
 				}
 			}
+
+			if (result.type === 'success') {
+				const { data } = result;
+				const userName = data.user?.candidateName;
+				user.set({ isAuthenticated: true, name: userName, userUuid: data?.user?.uuid });
+				displayLoginPopUp = false;
+			}
 			// handleDisplayLoginPopUp();
 			// goto(`/`);
 			// TODO handle form result validation and then navigate
+			loggingIn = false;
 		};
 	}
 
@@ -78,6 +92,10 @@
 
 	function handleForgotPassword() {
 		error = $format('ForgotPinMessage');
+	}
+
+	function toggleVisibility() {
+		showPassword = !showPassword;
 	}
 </script>
 
@@ -143,20 +161,32 @@
 							bind:value={formObject.enrollmentId}
 							type="username"
 							name="enrollmentId"
-							required={true}
+							required={true}	
 						/>
 					</div>
 
 					<div class="mb-6">
 						<InputField
-							label={$format('UniquePin')}
-							placeholder={$format('EnterUniquePin')}
-							bind:value={formObject.uniqueId}
-							type="password"
-							name="password"
-							required={true}
-							autocomplete="password"
-						/>
+						label={$format('UniquePin')}
+						placeholder={$format('EnterUniquePin')}
+						type={showPassword ? 'text' : 'password'}
+						bind:value={formObject.uniqueId}
+						name="password"
+						required
+						autocomplete="password"	
+						><!-- Icon Slot -->
+						<button
+							type="button"
+							class="flex items-center justify-center text-gray-500 hover:text-gray-700 focus:outline-none"
+							on:click={toggleVisibility}
+						>
+							{#if showPassword}
+								<span class="material-icons text-lg">visibility</span>
+							{:else}
+								<span class="material-icons text-lg">visibility_off</span>
+							{/if}
+						</button>
+					</InputField>
 					</div>
 					<div class="mb-2">
 						<Filter
@@ -186,8 +216,11 @@
 						<p class="text-red-500 text-xs mb-2">* {error}</p>
 					{/if}
 					<button
-						class="w-full text-center py-2 text-white text-sm bg-primary rounded-md font-semibold hover:bg-primary-hover"
-						type="submit">{$format('Login')}</button
+						class="w-full flex items-center gap-2 justify-center text-center py-2 text-white text-sm bg-primary rounded-md font-semibold hover:bg-primary-hover"
+						type="submit">{$format('Login')}
+						{#if loggingIn}
+							<Spinner size={'20px'} borderWidth={'3px'} />
+						{/if}</button
 					>
 				</form>
 				<div class="flex flex-col sm:flex-row mb-6">

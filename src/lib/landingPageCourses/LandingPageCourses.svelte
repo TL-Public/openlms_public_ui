@@ -6,7 +6,7 @@
 	import ReapPartialLogo from '$lib/svgComponents/ReapPartialLogo.svelte';
 	import Tabs from '$lib/landingPageCourses/Tabs.svelte';
 	import HorizontalScroll from './horizontalScroll.svelte';
-	import { categoryList } from '$lib/temp.admin.js';
+	import { categoryList } from '$lib/data.js';
 	import { _ } from 'svelte-i18n';
 	import { page } from '$app/stores';
 	// gets the all the data of courses from the parent

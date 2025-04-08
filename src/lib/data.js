@@ -459,33 +459,6 @@ export const tableData = [
 	}
 ];
 
-export const coursesSideBarList = [
-	// {
-	// 	id: 1,
-	// 	name: 'Most popular',
-	// 	category: 'most-pop'
-	// },
-	{
-		id: 2,
-		name: 'Agricultural programmes',
-		category: 'agricultural EDPs'
-	},
-	{
-		id: 3,
-		name: 'Product programmes',
-		category: 'product EDPs'
-	},
-	{
-		id: 4,
-		name: 'Process programmes',
-		category: 'process EDPs'
-	},
-	{
-		id: 5,
-		name: 'General EDP',
-		category: 'general EDPs'
-	}
-];
 
 export const videoInfo = [
 	{
@@ -584,76 +557,6 @@ export const studentLifeCycle = [
 	{
 		description: 'LifeCycle4Description',
 		img: 'life-cycle-3.svg'
-	}
-];
-
-export const testimonialData = [
-	{
-		name: 'Maju Mai',
-		designation: "Women's tailor,",
-		place: 'Ranchi, Jharkhand',
-		testimonialText:
-			"REAP's women's tailor course was my lifeline. Learned new techniques and now, clients praise my work. ",
-		img: '/sewing.png',
-		course: 'Tailoring and Stiching'
-	},
-
-	{
-		name: 'Sai Saranya',
-		designation: 'Needleworker',
-		place: 'Guntur, Andhra Pradesh',
-		testimonialText:
-			"REAP's Embroidery and needlecraft course was my lifeline. Learned new techniques and now, clients praise my work. Tailoring's not just a job anymore, it's my passion reborn.",
-		img: '/embroidery-artist.png',
-		course: 'Embroidery and needlecraft'
-	},
-
-	{
-		name: 'Rishabh Yadav',
-		designation: 'Bike mechanic',
-		place: 'Hissar, Haryana',
-		testimonialText:
-			'Bike repair and Servicing course  was my lifeline. Learned new techniques, tackled fancy fabrics.',
-		img: '/mechanic.png',
-		course: 'Bike repair'
-	},
-
-	{
-		name: 'Manoj Kumar Jha',
-		designation: 'Suit specialist',
-		place: 'Ranchi, Jharkhand',
-		testimonialText:
-			"REAP's Tailoring and stitching course was my lifeline. Learned new techniques and now, clients praise my work. Tailoring's not just a job anymore, it's my passion reborn.",
-		img: '/sewing.png',
-		course: 'Tailoring and Stiching'
-	}
-];
-
-export const coursesUnderRSETIs = [
-	{
-		name: 'Women Tailoring and Stiching',
-		createdOn: '2023-01-01T10:00:00.000+00:00',
-		status: 'ACTIVE'
-	},
-	{
-		name: 'Knitting and Embroidery ',
-		createdOn: '2023-02-04T10:00:00.000+00:00',
-		status: 'ACTIVE'
-	},
-	{
-		name: 'Introduction to Java',
-		createdOn: '2023-05-08T10:00:00.000+00:00',
-		status: 'ACTIVE'
-	},
-	{
-		name: 'Bee Keeping',
-		createdOn: '2023-03-09T10:00:00.000+00:00',
-		status: 'ACTIVE'
-	},
-	{
-		name: 'Phone Repair',
-		createdOn: '2023-04-03T10:00:00.000+00:00',
-		status: 'ACTIVE'
 	}
 ];
 
@@ -771,71 +674,20 @@ export const monthNames = [
 	'Dec'
 ];
 
-export const carouselData = [
-	{
-		uuid: '1309073e-313d-4ddb-92fd-af46a66c12b6',
-		image: null,
-		createdAt: '2024-11-07T09:15:09.914248Z',
-		updatedAt: '2024-11-07T12:22:58.078061Z',
-		translations: [
-			{
-				id: 12,
-				languageCode: 'hi',
-				name: 'श्री। अध्यक्ष एबीसी',
-				designation: 'एन.ए.आर के अध्यक्ष',
-				testimonialText: 'आरईएपी कौशल विकास का लोकतंत्रीकरण करने के लिए'
-			},
-			{
-				id: 11,
-				languageCode: 'en',
-				name: 'Shri. Chairman ABCDEFG',
-				designation: 'Chairman of N.A.R',
-				testimonialText: 'REAP is revolutionary idea to democratize skill development !!'
-			}
-		]
+export const categoryList = {
+	en: {
+		0: '-',
+		1: 'agricultural',
+		2: 'process',
+		3: 'product',
+		4: 'general'
 	},
-	{
-		uuid: '58acb2af-15c2-47c1-bb13-58d1ad83cba5',
-		image: null,
-		createdAt: '2024-11-07T10:10:30.220954Z',
-		updatedAt: '2024-11-08T05:11:47.197995Z',
-		translations: [
-			{
-				id: 16,
-				languageCode: 'hi',
-				name: 'Himanshu Sharma Hi',
-				designation: 'State Chief of RUDSETI Hi',
-				testimonialText: 'REAP is revolutionary idea to democratize skill development. Hi'
-			},
-			{
-				id: 15,
-				languageCode: 'en',
-				name: 'Himanshu Mukherjee',
-				designation: 'State Chief of RUDSETI',
-				testimonialText: 'REAP is revolutionary idea to democratize skill development.....'
-			}
-		]
-	},
-	{
-		uuid: 'dc7dfc00-cfee-426c-b36c-71ef02855fc1',
-		image: null,
-		createdAt: '2024-11-07T09:13:26.966526Z',
-		updatedAt: '2024-11-07T09:13:26.966527Z',
-		translations: [
-			{
-				id: 4,
-				languageCode: 'hi',
-				name: 'श्री मंत्री ABC',
-				designation: 'कौशल और उद्यमिता मंत्री',
-				testimonialText: 'आरईएपी कौशल विकास का लोकतंत्रीकरण करने के लिए'
-			},
-			{
-				id: 3,
-				languageCode: 'en',
-				name: 'Shri. Minister ABC',
-				designation: 'Minister for Skilling and Entrepreneurship',
-				testimonialText: 'REAP is revolutionary idea to democratize skill development.'
-			}
-		]
+	hi: {
+		0: '-',
+		1: 'कृषि',
+		2: 'प्रक्रिया',
+		3: 'उत्पाद',
+		4: 'सामान्य'
 	}
-];
+};
+

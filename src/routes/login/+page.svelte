@@ -7,10 +7,12 @@
 	import { enhance } from '$app/forms';
 	import { goto } from '$app/navigation';
 	import Filter from '$lib/Components/Filter.svelte';
+	import { format } from 'svelte-i18n';
 	export let data;
 
 	const { centersData } = data;
 	export let form;
+	let showPassword = false;
 	// extract the form details
 	let error = form?.error;
 	let formLoginDetails = form?.loginDetails;
@@ -36,6 +38,9 @@
 			goto(`/`);
 			// TODO handle form result validation and then navigate
 		};
+	}
+	function toggleVisibility() {
+		showPassword = !showPassword;
 	}
 </script>
 
@@ -86,14 +91,27 @@
 
 					<div class="mb-6">
 						<InputField
-							label={'Unique Pin'}
-							placeholder={'Enter your Unique Pin'}
-							bind:value={formObject.uniqueId}
-							type="password"
-							name="password"
-							required={true}
-							autocomplete="password"
-						/>
+						label={$format('UniquePin')}
+						placeholder={$format('EnterUniquePin')}
+						type={showPassword ? 'text' : 'password'}
+						bind:value={formObject.uniqueId}
+						name="password"
+						required
+						autocomplete="password"
+					>
+						<!-- Icon Slot -->
+						<button
+							type="button"
+							class="flex items-center justify-center text-gray-500 hover:text-gray-700 focus:outline-none"
+							on:click={toggleVisibility}
+						>
+							{#if showPassword}
+								<span class="material-icons text-lg">visibility</span>
+							{:else}
+								<span class="material-icons text-lg">visibility_off</span>
+							{/if}
+						</button>
+					</InputField>
 					</div>
 					<div class="mb-2">
 						<Filter

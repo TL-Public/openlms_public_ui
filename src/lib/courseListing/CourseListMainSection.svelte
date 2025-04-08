@@ -1,8 +1,9 @@
 <script>
 	import { format } from 'svelte-i18n';
+	import { Course_Sorting_Order } from '/src/config/constants.js';
 	import { onMount, tick } from 'svelte';
 	import { Sorting_Orders } from '../../config/constants';
-	import { categoryList } from '$lib/temp.admin.js';
+	import { categoryList } from '$lib/data.js'
 	import SearchBar from '$lib/Components/SearchBar.svelte';
 	import { _ } from 'svelte-i18n';
 	import Sidebar from '$lib/faq/Sidebar.svelte';
@@ -37,17 +38,34 @@
 	$: setSortActions($_);
 	function setSortActions() {
 		sortActionItems = [
-			{ id: 1, name: $_('Title ( A to Z )'), displayName: $_('Title ( A to Z )') },
-			{ id: 2, name: $_('TitleZtoA'), displayName: $_('TitleZtoA') },
-			{ id: 3, name: $_('DurationLowtoHigh'), displayName: $_('DurationLowtoHigh') },
-			{ id: 4, name: $_('DurationHighToLow'), displayName: $_('DurationHighToLow') },
-			{ id: 5, name: $_('ChapterCountLowToHigh'), displayName: $_('ChapterCountLowToHigh') },
-			{ id: 6, name: $_('ChapterCountHighToLow'), displayName: $_('ChapterCountHighToLow') }
+			{ id: 1, name: Course_Sorting_Order.TITLE_A_TO_Z, displayName: $_('Title ( A to Z )') },
+			{ id: 2, name: Course_Sorting_Order.TITLE_Z_TO_A, displayName: $_('TitleZtoA') },
+			{
+				id: 3,
+				name: Course_Sorting_Order.DURATION_LOW_TO_HIGH,
+				displayName: $_('DurationLowtoHigh')
+			},
+			{
+				id: 4,
+				name: Course_Sorting_Order.DURATION_HIGH_TO_LOW,
+				displayName: $_('DurationHighToLow')
+			},
+			{
+				id: 5,
+				name: Course_Sorting_Order.CHAPTERCNT_LOW_TO_HIGH,
+				displayName: $_('ChapterCountLowToHigh')
+			},
+			{
+				id: 6,
+				name: Course_Sorting_Order.CHAPTERCNT_HIGH_TO_LOW,
+				displayName: $_('ChapterCountHighToLow')
+			}
 		];
 	}
 
 	onMount(async () => {
 		selectedSortOptionDisplayName = sortActionItems[0]?.displayName;
+		selectedSortOption = sortActionItems[0]?.name;
 		expandedItem = category;
 
 		const categorySet = new Set();
@@ -118,7 +136,7 @@
 			/>
 			{#if selectedSortOption && searchValue}
 				<p class="text-xs mb-2 mt-2">
-					{$_('SortedBy')}: {selectedSortOption}
+					{$_('SortedBy')}: {selectedSortOptionDisplayName}
 				</p>
 			{/if}
 		</div>
@@ -130,7 +148,7 @@
 					on:pickerSelection={handleSort}
 					optionList={sortActionItems}
 					addClass={'justify-self-end'}
-					defaultSortItem={sortActionItems[0]?.name}
+					defaultSortItem={selectedSortOption}
 				/>
 			</div>
 		{/if}
@@ -165,7 +183,6 @@
 			{error}
 			{loading}
 			{selectedSortOption}
-			defaultSortItem={sortActionItems[0]?.name}
 		/>
 	{/if}
 </div>
@@ -222,7 +239,6 @@
 				{error}
 				{loading}
 				{selectedSortOption}
-				defaultSortItem={sortActionItems[0]?.name}
 			/>
 		</div>
 	</div>

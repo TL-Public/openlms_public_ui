@@ -1,7 +1,6 @@
 <script>
 	import DatatableCard from '$lib/Components/DatatableCard.svelte';
 	import Datatable from '$lib/Components/datatable.svelte';
-	import { tableData } from '$lib/data';
 	import { _, format } from 'svelte-i18n';
 	import SearchBar from '$lib/Components/SearchBar.svelte';
 	import Filters from '$lib/courses/Filters.svelte';

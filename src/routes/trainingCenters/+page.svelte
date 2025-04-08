@@ -12,6 +12,7 @@
 	import { _ } from 'svelte-i18n';
 	import InlinePicker from '$lib/Components/InlinePicker.svelte';
 	import { onMount } from 'svelte';
+	import { Course_Sorting_Order } from '/src/config/constants.js';
 
 	let loading = false;
 	let selectedSortOption = '';
@@ -218,10 +219,18 @@
 	$: setSortActions($_);
 	function setSortActions() {
 		sortActionItems = [
-			{ id: 1, name: $_('Title ( A to Z )'), displayName: $_('Title ( A to Z )') },
-			{ id: 2, name: $_('TitleZtoA'), displayName: $_('TitleZtoA') },
-			{ id: 3, name: $_('PlannedCoursesLowToHigh'), displayName: $_('PlannedCoursesLowToHigh') },
-			{ id: 4, name: $_('PlannedCoursesHighToLow'), displayName: $_('PlannedCoursesHighToLow') }
+			{ id: 1, name: Course_Sorting_Order.TITLE_A_TO_Z, displayName: $_('Title ( A to Z )') },
+			{ id: 2, name: Course_Sorting_Order.TITLE_Z_TO_A, displayName: $_('TitleZtoA') },
+			{
+				id: 3,
+				name: Course_Sorting_Order.PLANNED_COURSES_LOW_TO_HIGH,
+				displayName: $_('PlannedCoursesLowToHigh')
+			},
+			{
+				id: 4,
+				name: Course_Sorting_Order.PLANNED_COURSES_HIGH_TO_LOW,
+				displayName: $_('PlannedCoursesHighToLow')
+			}
 		];
 	}
 

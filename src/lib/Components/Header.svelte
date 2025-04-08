@@ -12,12 +12,18 @@
 	import SelectInput from './SelectInput.svelte';
 	import LanguageIcon from '$lib/svgComponents/LanguageIcon.svelte';
 	import { user } from '/src/stores';
+	import PasswordresetPopUp from '$lib/components/PasswordResetPopUp.svelte';
+    import Toast from '$lib/components/Toast.svelte';
+	import { onDestroy } from 'svelte';
 
 	export let lang = 'en';
 	export let displayLoginPopUp = false;
 	let dispatch = createEventDispatcher();
 	let loggedIn = false;
 	let showProfilePopup = false;
+	let showPasswordResetPopUp=false
+	let showToast=false;
+	let profileRef;
 	let burgerMenuOpen = false;
 	let menuItemClicked = false;
 	// need to get this from the local storage and default to english if not there
@@ -90,6 +96,29 @@
 			logout();
 		}
 	}
+
+	function handleShowPasswordResetPopUp(){
+		showPasswordResetPopUp=!showPasswordResetPopUp
+	}
+	function handleToast()
+	{
+		showToast=true
+	}
+	function handleClickOutside(event) {
+		if (profileRef && !profileRef.contains(event.target)) {
+			showProfilePopup = false;
+		}
+	}
+	onMount(() => {
+		if (typeof window !== 'undefined') {
+			document.addEventListener('click', handleClickOutside);
+		}
+	});
+	onDestroy(() => {
+		if (typeof window !== 'undefined') {
+			document.removeEventListener('click', handleClickOutside);
+		}
+	});
 </script>
 
 <header
@@ -126,7 +155,7 @@
 				{#if loggedIn}
 					<button
 						class="flex items-center gap-2 justify-center cursor-pointer"
-						on:click={() => (showProfilePopup = !showProfilePopup)}
+						on:click|stopPropagation={() => (showProfilePopup = !showProfilePopup)}
 					>
 						<div
 							class="flex items-center justify-center w-8 h-8 bg-[#2E5ED4] font-medium text-white capitalize text-xl rounded-full leading-none m-0 p-0"
@@ -136,6 +165,7 @@
 					</button>
 					{#if showProfilePopup}
 						<div
+						bind:this={profileRef}
 							class="absolute right-0 top-16 z-10 min-w-48 p-4 origin-top-right rounded-md bg-white shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none transition ease-out duration-100"
 							role="menu"
 							aria-orientation="vertical"
@@ -143,7 +173,7 @@
 							tabindex="-1"
 						>
 							<div class="flex flex-col text-left items-start">
-								<span class="text-sm font-medium flex gap-2 mb-4">
+								<span class="text-sm font-medium flex items-center gap-2 mb-4">
 									<svg
 										xmlns="http://www.w3.org/2000/svg"
 										fill="none"
@@ -163,6 +193,7 @@
 									</span>
 								</span>
 							</div>
+							<div class="text-sm text-center pb-2 text-blue-600 underline hover:text-blue-800 flex justify-center hover:cursor-pointer" on:click={handleShowPasswordResetPopUp}>Reset Password</div>
 							<button class="w-full primary-btn" on:click={logout}>{$_('Logout')}</button>
 						</div>
 					{/if}
@@ -225,6 +256,13 @@
 	</div>
 </header>
 
+{#if showPasswordResetPopUp}
+<PasswordresetPopUp 
+endPoint={'apis/traineePasswordReset'}
+on:closePopup={handleShowPasswordResetPopUp}
+on:handleToast={handleToast}/>
+{/if}
+
 <!-- Mobile Menu Items -->
 
 <MenuSmallScreen
@@ -236,3 +274,12 @@
 	{languageOptionList}
 	on:selectLang={handleLocaleChange}
 />
+
+{#if showToast}
+    <Toast
+        message={"Password reset successful."}
+        viewModal={true}
+        successMessage={true} 
+        on:handleToastClose={() => showToast = false}
+    />
+{/if}

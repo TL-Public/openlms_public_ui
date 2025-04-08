@@ -15,6 +15,7 @@
 	import PasswordresetPopUp from '$lib/components/PasswordResetPopUp.svelte';
     import Toast from '$lib/components/Toast.svelte';
 	import { onDestroy } from 'svelte';
+	import { goto } from '$app/navigation';
 
 	export let lang = 'en';
 	export let displayLoginPopUp = false;
@@ -80,6 +81,10 @@
 		}
 	}
 
+	function handleGoToProfile(){
+		goto('/profile')
+	}
+
 	async function logout() {
 		try {
 			const resp = await fetch('/apis/auth/logout', { method: 'POST' });
@@ -129,7 +134,7 @@
 			<span class="sr-only">Edureach Logo</span>
 
 			<h1 class="flex items-center justify-center ">
-			<img src="/eduReachSmallLogo.svg" alt="" class="h-6 md:h-8 lg:h-12 ">
+			<img src="/eduReachSmallLogo.svg" alt="" class="h-6 md:h-8 lg:h-8 ">
 			</h1>
 		</a>
 	</div>
@@ -193,7 +198,7 @@
 									</span>
 								</span>
 							</div>
-							<div class="text-sm text-center pb-2 text-blue-600 underline hover:text-blue-800 flex justify-center hover:cursor-pointer" on:click={handleShowPasswordResetPopUp}>Reset Password</div>
+							<div class="text-sm text-center pb-2 text-blue-600 underline hover:text-blue-800 flex justify-center hover:cursor-pointer" on:click={handleGoToProfile}>View Profile</div>
 							<button class="w-full primary-btn" on:click={logout}>{$_('Logout')}</button>
 						</div>
 					{/if}

@@ -45,6 +45,7 @@ export default {
 				white: '#FFFFFF',
 				white80: '#FCFCFC',
 				white50: '#F6F6F6',
+				offwhite: '#fcfcfc',
 
 				fontFamily: {
 					noto: "'Noto-Sans', Inter"

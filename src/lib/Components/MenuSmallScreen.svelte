@@ -10,6 +10,7 @@
 	import FaqIcon from '$lib/svgComponents/FAQIcon.svelte';
 	import LoginIcon from '$lib/svgComponents/LoginIcon.svelte';
 	import DashboardIcon from '$lib/svgComponents/DashboardIcon.svelte';
+	import { goto } from '$app/navigation';
 
 
 	export let burgerMenuOpen;
@@ -28,6 +29,10 @@
 		} else {
 			burgerMenuOpen = false;
 		}
+	}
+
+	function handleGoToProfile(){
+		goto('/profile')
 	}
 
 	function handleLocaleChange(event) {
@@ -67,20 +72,28 @@
 				on:click={handleMenuItemClick}
 				on:keypress={handleMenuItemClick}
 			>
-				{#if $user?.name}
-					<li class=" w-full flex gap-4 items-center mt-auto h-16 border-b pl-4">
-						<div
-							class="flex items-center justify-center w-8 h-8 bg-[#2E5ED4] font-medium text-white capitalize text-xl rounded-full leading-none m-0 p-0"
-						>
-							{$user?.name ? $user.name[0] : ''}
-						</div>
-						<span>
-							Hi, <span class="font-medium">
-								{$user?.name}
-							</span>
-						</span>
-					</li>
-				{/if}
+			{#if $user?.name}
+			<li class="w-full flex gap-4 items-center mt-auto h-20 border-b pl-4 mb-2">
+			  <!-- Avatar on the Left -->
+			  <div
+				  class="flex items-center justify-center w-10 h-10 bg-secondary font-medium text-white capitalize text-xl rounded-full"
+			  >
+				  {$user?.name ? $user.name[0] : ''}
+			  </div>
+		  
+			  <!-- Name & View Profile stacked on the Right -->
+			  <div class="flex flex-col">
+				  <span class="font-medium">{$_('Hi')}, {$user?.name}</span>
+				  <div
+					  class="text-sm text-blue-600 underline hover:text-blue-800 hover:cursor-pointer"
+					  on:click={handleGoToProfile}
+				  >
+					  {$_('View Profile')}
+				  </div>
+			  </div>
+		  </li>
+		  
+		  {/if}
 				<SideMenuItem id="courses">
 					<CoursesIcon slot="icon" addClass="h-8 w-8 " />
 					<a href="/courses" id="courses" class="block w-full h-full" slot="link">{$_('Courses')}</a

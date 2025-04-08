@@ -5,6 +5,7 @@ export async function POST({ request, fetch, cookies }) {
 
 	let res;
 	const authToken = cookies.get('authToken');
+	console.log('authToken', authToken)
 	try {
 
 		const parsedData = await request.json();
@@ -15,7 +16,7 @@ export async function POST({ request, fetch, cookies }) {
 			endPoint += '?' + queryparams[1];
 		}
 
-        console.log('data to send', JSON.stringify(parsedData))
+		console.log(JSON.stringify(parsedData))
 
 		res = await fetch(endPoint, {
 			method: 'POST',
@@ -26,24 +27,25 @@ export async function POST({ request, fetch, cookies }) {
 			body: JSON.stringify(parsedData)
 		});
 
-        console.log('res', res)
+		console.log('res', res)
 
 
 		let responseData = null;
 
 		try {
-			responseData = await res?.json();
+			responseData = await res?.text();
+			console.log('responseData', responseData)
 		} catch (jsonError) {
 			try {
 				// If JSON parsing fails
-				responseData = await res?.text();
+				responseData = await res?.json();
+				console.log('responseData', responseData)
 			} catch (textError) {
 				// If both JSON & text parsing fail
 				responseData = 'Failed to reset password';
+				console.log('responseData', responseData)
 			}
 		}
-
-        console.log('responseData', responseData)
 
 
 		if(res?.status === 400 || res?.status === 500){

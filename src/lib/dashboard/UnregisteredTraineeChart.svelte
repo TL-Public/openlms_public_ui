@@ -39,10 +39,10 @@
 	];
 
 	let tabsList = [
-		{ id: 1, text: '1W', textDispaly: '1W' },
-		{ id: 2, text: '1M', textDispaly: '1M' },
-		{ id: 3, text: '1Y', textDispaly: '1Y' },
-		{ id: 4, text: 'YTD', textDispaly: 'YTD' }
+		{ id: 1, text: '1W', textDisplay: '1W' },
+		{ id: 2, text: '1M', textDisplay: '1M' },
+		{ id: 3, text: '1Y', textDisplay: '1Y' },
+		{ id: 4, text: 'YTD', textDisplay: 'YTD' }
 	];
 
 	let labels = sheetData.map((item) => item.month);

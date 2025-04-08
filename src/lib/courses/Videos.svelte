@@ -82,7 +82,14 @@
 		languageAvailableForVideos = languageAvailableForVideos.sort(
 			(a, b) => a.orderNumber - b.orderNumber
 		);
-	}
+	
+
+	selectedLanguage = chapters?.some(chapter => 
+    	chapter?.videos?.some(video => video?.languageCode === 'en')
+		) 
+    	? 'en' 
+    	: chapters?.find(ch => ch.videos?.length)?.videos?.[0]?.languageCode || '';
+		}
 
 	function handleSearchValue(e) {
 		searchValue = e.detail;

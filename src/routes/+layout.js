@@ -92,7 +92,7 @@ export async function load({ fetch, data }) {
 		try {
 			let statesMap = {};
 
-			const res = await fetch(` /apis/states`);
+			const res = await fetch(`/apis/states`);
 			if (!res.ok || res.status !== 200) {
 				return [
 					{

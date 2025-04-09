@@ -20,7 +20,7 @@
 		{#each generalStats as stats, index (index)}
 			<SingleStats {stats} {alignment} />
 		{/each}
-	{:else}
-		<ErrorMessage {error} />
+	<!-- {:else}
+		<ErrorMessage {error} /> -->
 	{/if}
 </div>

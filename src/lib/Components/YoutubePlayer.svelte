@@ -68,11 +68,11 @@
 			dispatch('playerLoaded', false);
 			videoLoaded = false;
 			if (!videoId) {
-				if (videoId === null) {
+				// if (videoId === null) {
 					videoLoaded = true;
 					// videoLoadError = true;
 					dispatch('error', 'Invalid Url');
-				}
+				// }
 				return;
 			}
 

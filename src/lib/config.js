@@ -1,1 +1,1 @@
-export const BASE_URL = 'http://uatapi.reaplearn.in';
+export const BASE_URL = 'https://cms-api.edu-reach.in';

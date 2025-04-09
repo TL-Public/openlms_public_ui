@@ -7,6 +7,18 @@
 
 	export let testimonials;
 	export let lang;
+	export let traineeTestimonialConfig ={
+		heading:'LandingPageTestimonailSectionTitle',
+		size:'large',
+		showLink:true
+	}
+
+	const sizeClasses = {
+		large: 'text-base sm:text-2xl md:text-3xl',
+		compact: 'text-base sm:text-lg md:text-xl',
+		base:'text-base sm:text-xl'
+	};
+
 
 	let carouselIndex = 0;
 	let filteredTestimonial;
@@ -20,7 +32,7 @@
 				if (!acc[languageCode]) {
 					acc[languageCode] = [];
 				}
-				acc[languageCode].push({
+				acc[languageCode]?.push({
 					courseUuid: item?.courseUuid,
 					...translationData
 				});
@@ -32,22 +44,22 @@
 	}
 </script>
 
-<div class="relative bg-white50 py-8 md:py-20">
+<div class="relative py-8 md:py-20">
 	<!-- pb - given to he testimonial container to maintain shadow -->
 	<div
-		class="px-4 pr-0 sm:px-6 md:pr-0 lg:px-12 w-full h-full 2xl:max-w-7xl 2xl:mx-auto 2xl:px-0 lg:pb-32"
+		class=""
 	>
 		<div class=" font-bold text-primary mb-4 sm:mb-8 flex items-center gap-2">
 			<!-- <div class="hidden sm:block"><ReapPartialLogo /></div>
 			<div class="block sm:hidden"><ReapPartialLogoMobile /></div> -->
 
-			<h2 class="uppercase-headers">{$_('LandingPageTestimonailSectionTitle')}</h2>
+			<h2 class="uppercase-headers">{$_(traineeTestimonialConfig?.heading)}</h2>
 		</div>
 
 		{#if error == null}
 			<div class="hidden lg:grid grid-cols-4 gap-5">
 				{#each filteredTestimonial as testimonial, index (index)}
-					<SingleTestimonialItem {testimonial} />
+					<SingleTestimonialItem {testimonial}  showCourseLink={traineeTestimonialConfig.showLink} />
 				{/each}
 			</div>
 		{:else}
@@ -67,7 +79,7 @@
 							style:translate="{-100 * carouselIndex}%"
 							style:transition="translate 300ms ease-in-out"
 						>
-							<SingleTestimonialItem {testimonial} />
+							<SingleTestimonialItem {testimonial}  showCourseLink={traineeTestimonialConfig.showLink} />
 						</div>
 					{/each}
 				{:else}

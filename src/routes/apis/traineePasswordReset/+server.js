@@ -1,0 +1,72 @@
+import { json } from '@sveltejs/kit';
+import { BASE_URL } from '$lib/config';
+
+export async function POST({ request, fetch, cookies }) {
+
+	let res;
+	const authToken = cookies.get('authToken');
+	console.log('authToken', authToken)
+	try {
+
+		const parsedData = await request.json();
+
+		let queryparams = request.url.split('?');
+		let endPoint = `${BASE_URL}/apis/v1/trainees/reset-password`;
+		if (queryparams?.length > 1) {
+			endPoint += '?' + queryparams[1];
+		}
+
+		console.log(JSON.stringify(parsedData))
+
+		res = await fetch(endPoint, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				Authorization: `Bearer ${authToken}`
+			},
+			body: JSON.stringify(parsedData)
+		});
+
+		console.log('res', res)
+
+
+		let responseData = null;
+
+		try {
+			responseData = await res?.text();
+			console.log('responseData', responseData)
+		} catch (jsonError) {
+			try {
+				// If JSON parsing fails
+				responseData = await res?.json();
+				console.log('responseData', responseData)
+			} catch (textError) {
+				// If both JSON & text parsing fail
+				responseData = 'Failed to reset password';
+				console.log('responseData', responseData)
+			}
+		}
+
+
+		if(res?.status === 400 || res?.status === 500){
+			throw new Error(responseData?.error || responseData || 'Failed to reset password');
+		}
+
+		if (!res.ok) {
+			throw new Error(responseData?.error || responseData || 'Failed to reset password');
+		}
+
+		if (res.status != 200) {
+			throw new Error(responseData?.error || responseData || 'Failed to reset password');
+		}
+
+
+
+		// if (data?.length === 0 || Object.keys(data)?.length === 0) {
+		// 	throw new Error('Data not found');
+		// }
+		return json({ message: 'Password reset successfully' }, { status: res?.status });
+	} catch (error) {
+		return json({ status: res?.status, error: error?.message }, { status: res?.status });
+	}
+}

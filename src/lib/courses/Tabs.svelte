@@ -25,7 +25,7 @@
 					{#if tab?.icon}
 						<img src={tab?.icon} alt="icon of {tab?.textDisplay}" class="h-5 w-5 lg:h-6 lg:w-6" />
 					{/if}
-					<span>{tab?.textDispaly}</span>
+					<span>{tab?.textDisplay}</span>
 				</div></button
 			>
 		{/each}

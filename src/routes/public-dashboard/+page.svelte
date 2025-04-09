@@ -34,7 +34,7 @@
 			text: 'Course Stats',
 			component: CourseStatsContainer,
 			clicked: false,
-			textDispaly: $format('CourseStats'),
+			textDisplay: $format('CourseStats'),
 			historicalData: { coursesByState, overallStats },
 			lang: lang,
 			icon: '/coursesIcon.svg'
@@ -43,7 +43,7 @@
 			text: 'Trainee Stats',
 			component: TraineeStatsContainer,
 			clicked: false,
-			textDispaly: $format('Trainee Stats'),
+			textDisplay: $format('Trainee Stats'),
 			historicalData: {
 				traineesByCourse,
 				courseList,
@@ -64,7 +64,7 @@
 		// 	text: 'Assessment',
 		// 	component: Assessment,
 		// 	clicked: false,
-		// 	textDispaly: $format('Assessment'),
+		// 	textDisplay: $format('Assessment'),
 		// 	lang:lang,
 		// 	icon: '/assessment.svg'
 		// }
@@ -78,7 +78,7 @@
 				text: 'Course Stats',
 				component: CourseStatsContainer,
 				clicked: false,
-				textDispaly: $format('CourseStats'),
+				textDisplay: $format('CourseStats'),
 				historicalData: { coursesByState, overallStats },
 				icon: '/coursesIcon.svg'
 			},
@@ -86,7 +86,7 @@
 				text: 'Trainee Stats',
 				component: TraineeStatsContainer,
 				clicked: false,
-				textDispaly: $format('TraineeStats'),
+				textDisplay: $format('TraineeStats'),
 				historicalData: {
 					traineesByCourse,
 					courseList,
@@ -106,7 +106,7 @@
 			// 	text: 'Assessment',
 			// 	component: Assessment,
 			// 	clicked: false,
-			// 	textDispaly: $format('Assessment'),
+			// 	textDisplay: $format('Assessment'),
 			// 	// historicalData: ,
 			// 	icon: '/assessment.svg'
 			// }

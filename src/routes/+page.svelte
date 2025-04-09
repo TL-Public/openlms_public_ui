@@ -18,4 +18,7 @@
 <AboutSection generalStats={overAllStatsData} token={data.token} />
 <LandingPageCourses cardsData={allCoursesData} />
 <HowToUsePlatform />
-<TestimonialSection testimonials={testimonialData} {lang} />
+<!-- <TestimonialSection testimonials={testimonialData} {lang} /> -->
+<div class="px-4 pr-0 md:px-16  md:pr-0 lg:px-16  w-full h-full 2xl:max-w-7xl 2xl:mx-auto 2xl:px-0 lg:pb-32">
+	<TestimonialSection testimonials={testimonialData} {lang} />
+</div>

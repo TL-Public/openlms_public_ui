@@ -2,17 +2,25 @@
 	import SelectInput from '$lib/Components/SelectInput.svelte';
 	import LineChart from '$lib/Components/LineChart.svelte';
 	import Tabs from '../courses/Tabs.svelte';
-	const programmeList = [
-		{ id: 0, name: 'All Courses', key: 'count' },
-		{ id: 1, name: 'Programme 1', key: 'programme1' },
-		{ id: 2, name: 'Programme 2', key: 'programme2' },
-		{ id: 3, name: 'Programme 3', key: 'programme3' }
+	import { format } from 'svelte-i18n';
+	import Filter from '$lib/Components/Filter.svelte';
+
+	export let courseList = [];
+	export let lang = 'en';
+
+	const allLanguages = { id: 0, name: $format('AllLanguages'), key: 'count' };
+
+	const languageListWithMultiLingualData = [
+		{ id: 1, name: 'English', key: 'programme1', lang: 'en' },
+		{ id: 2, name: 'Hindi', key: 'programme2', lang: 'en' },
+		{ id: 3, name: 'Tamil', key: 'programme3', lang: 'en' },
+		{ id: 4, name: 'अंग्रेजी', key: 'programme1', lang: 'hi' },
+		{ id: 5, name: 'हिंदी', key: 'programme2', lang: 'hi' },
+		{ id: 6, name: 'तमिल', key: 'programme3', lang: 'hi' }
 	];
 	const languageList = [
-		{ id: 0, name: 'All Languages', key: 'count' },
-		{ id: 1, name: 'English', key: 'programme1' },
-		{ id: 2, name: 'Hindi', key: 'programme2' },
-		{ id: 3, name: 'Tamil', key: 'programme3' }
+		allLanguages,
+		...languageListWithMultiLingualData?.filter((item) => item.lang == lang)
 	];
 	const genderList = [
 		{ id: 0, name: 'All Genders' },
@@ -36,25 +44,25 @@
 	];
 
 	const sheetData = [
-		{ month: 'jan 24', count: 36305, programme1: 100, programme2: 200, programme3: 300 },
-		{ month: 'feb 24', count: 40594, programme1: 300, programme2: 200, programme3: 157 },
-		{ month: 'mar 24', count: 34238, programme1: 312, programme2: 392, programme3: 160 },
-		{ month: 'apr 24', count: 18461, programme1: 213, programme2: 230, programme3: 105 },
-		{ month: 'may 24', count: 34763, programme1: 100, programme2: 200, programme3: 250 },
-		{ month: 'jun 24', count: 51074, programme1: 231, programme2: 138, programme3: 100 },
-		{ month: 'jul 24', count: 35988, programme1: 123, programme2: 200, programme3: 293 },
-		{ month: 'aug 24', count: 36453, programme1: 100, programme2: 550, programme3: 391 },
-		{ month: 'sep 24', count: 49730, programme1: 312, programme2: 490, programme3: 100 },
-		{ month: 'oct 24', count: 33885, programme1: 100, programme2: 289, programme3: 300 },
-		{ month: 'nov 24', count: 28689, programme1: 231, programme2: 290, programme3: 100 },
-		{ month: 'dec 24', count: 51239, programme1: 100, programme2: 392, programme3: 300 }
+		{ month: 'jan', count: 36305, programme1: 100, programme2: 200, programme3: 300 },
+		{ month: 'feb', count: 40594, programme1: 300, programme2: 200, programme3: 157 },
+		{ month: 'mar', count: 34238, programme1: 312, programme2: 392, programme3: 160 },
+		{ month: 'apr', count: 18461, programme1: 213, programme2: 230, programme3: 105 },
+		{ month: 'may', count: 34763, programme1: 100, programme2: 200, programme3: 250 },
+		{ month: 'jun', count: 51074, programme1: 231, programme2: 138, programme3: 100 },
+		{ month: 'jul', count: 35988, programme1: 123, programme2: 200, programme3: 293 },
+		{ month: 'aug', count: 36453, programme1: 100, programme2: 550, programme3: 391 },
+		{ month: 'sep', count: 49730, programme1: 312, programme2: 490, programme3: 100 },
+		{ month: 'oct', count: 33885, programme1: 100, programme2: 289, programme3: 300 },
+		{ month: 'nov', count: 28689, programme1: 231, programme2: 290, programme3: 100 },
+		{ month: 'dec', count: 51239, programme1: 100, programme2: 392, programme3: 300 }
 	];
 
 	let tabsList = [
-		{ id: 1, text: '1W', textDispaly: '1W' },
-		{ id: 2, text: '1M', textDispaly: '1M' },
-		{ id: 3, text: '1Y', textDispaly: '1Y' },
-		{ id: 4, text: 'YTD', textDispaly: 'YTD' }
+		{ id: 1, text: '1W', textDisplay: '1W' },
+		{ id: 2, text: '1M', textDisplay: '1M' },
+		{ id: 3, text: '1Y', textDisplay: '1Y' },
+		{ id: 4, text: 'YTD', textDisplay: 'YTD' }
 	];
 
 	let labels = sheetData.map((item) => item.month);
@@ -77,35 +85,58 @@
 	};
 
 	let chartOptions = {
+		responsive: true,
+		maintainAspectRatio: false,
 		scales: {
 			x: {
 				title: {
 					display: true,
-					text: 'Month',
+					text: $format('Month'),
 					color: '#143164',
-					font: {
-						size: 16,
+					font: () => ({
+						size: window.matchMedia('(max-width: 768px)').matches ? 10 : 12,
 						weight: 'bold',
 						lineHeight: 1.2
-					},
-					padding: { top: 20, left: 0, right: 0, bottom: 0 }
+					}),
+					padding: () =>
+						window.matchMedia('(max-width: 768px)').matches
+							? { top: 5, left: 0, right: 0, bottom: 0 }
+							: { top: 20, left: 0, right: 0, bottom: 0 }
 				}
 			},
 			y: {
 				beginAtZero: true,
+
 				title: {
 					display: true,
-					text: 'No. of views on a course',
+					text: $format('NoOfViews'),
 					color: '#143164',
-					font: {
-						size: 16,
+					font: () => ({
+						size: window.matchMedia('(max-width: 768px)').matches ? 10 : 12,
 						weight: 'bold',
 						lineHeight: 1.2
-					},
-					padding: { top: 0, left: 0, right: 0, bottom: 20 }
+					}),
+					padding: () =>
+						window.matchMedia('(max-width: 768px)').matches
+							? { top: 0, left: 0, right: 0, bottom: 5 }
+							: { top: 0, left: 0, right: 0, bottom: 20 }
 				},
 				grid: {
 					display: false
+				},
+				ticks: {
+					callback: function (value) {
+						// Abbreviate numbers for smaller screens
+						if (window.matchMedia('(max-width: 768px)').matches) {
+							return value >= 1000 ? value / 1000 + 'k' : value;
+						}
+						// Default formatting for larger screens
+						return value.toLocaleString();
+					},
+					font: {
+						size: window.matchMedia('(max-width: 768px)').matches ? 10 : 12
+					},
+					color: '#143164'
 				}
 			}
 		},
@@ -142,37 +173,58 @@
 			]
 		};
 	}
+
+	let allCourses = $format('AllCourses');
+	let courseOptions = [
+		{ id: 'All', name: allCourses },
+		...courseList
+			.map((course) => ({
+				id: course.courseCode,
+				name: course.translations.find((t) => t.languageCode === lang)?.title || course.courseCode
+			}))
+			.sort((a, b) => a?.name?.localeCompare(b.name))
+	];
 </script>
 
 <div class="bg-white w-full flex flex-col py-8 px-16 rounded-lg">
-	<div class="flex justify-between items-center">
-		<h1 class="text-xl font-bold text-primary">Views - Registered Trainees</h1>
+	<div class="flex flex-col md:flex-row justify-between gap-2 md:gap-0">
+		<h1 class="text-base font-bold text-primary">{$format('Views-RegisteredTrainees')}</h1>
 		<div class="flex gap-4 mb-4">
-			<SelectInput
-				showFieldName={false}
-				optionList={programmeList}
-				itemSelected={programmeList[0].name}
-				addClass="min-w-[100px]"
+			<Filter
+				optionList={courseOptions}
+				optionListConfigObject={{ optionNameKey: 'name', optionIdKey: 'id' }}
+				itemSelected={courseOptions[0]?.name}
+				on:filterItemSelected={(e) => {
+					// error = null;
+					// updateChart(e.detail.id);
+				}}
 			/>
-			<SelectInput
-				showFieldName={false}
+			<Filter
 				optionList={languageList}
-				itemSelected={languageList[0].name}
-				addClass="min-w-[100px] "
+				optionListConfigObject={{ optionNameKey: 'name', optionIdKey: 'id' }}
+				itemSelected={languageList[0]?.name}
+				on:filterItemSelected={(e) => {
+					// error = null;
+					// updateChart(e.detail.id);
+				}}
 			/>
-			<SelectInput
-				showFieldName={false}
+			<Filter
 				optionList={ageGroups}
-				itemSelected={ageGroups[0].name}
-				on:itemSelection={() => {}}
-				addClass="min-w-[120px] "
+				optionListConfigObject={{ optionNameKey: 'name', optionIdKey: 'id' }}
+				itemSelected={ageGroups[0]?.name}
+				on:filterItemSelected={(e) => {
+					// error = null;
+					// updateChart(e.detail.id);
+				}}
 			/>
-			<SelectInput
-				showFieldName={false}
+			<Filter
 				optionList={genderList}
-				itemSelected={genderList[0].name}
-				on:itemSelection={() => {}}
-				addClass="min-w-[100px] "
+				optionListConfigObject={{ optionNameKey: 'name', optionIdKey: 'id' }}
+				itemSelected={genderList[0]?.name}
+				on:filterItemSelected={(e) => {
+					// error = null;
+					// updateChart(e.detail.id);
+				}}
 			/>
 		</div>
 	</div>

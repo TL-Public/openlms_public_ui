@@ -6,29 +6,19 @@
 	// import RSETI-info-graphic from '/'
 </script>
 
-<div
-	class="bg-blue-10 px-8 pt-4 pb-8 mb-8 mt-0 lg:mb-9 lg:mt-0 lg:pb-9 lg:pt-6 lg:min-h-40 lg:px-[92px]"
->
+<div class="bg-blue-20 rounded-md  px-4 pt-4 pb-4 sm:px-9  sm:pb-12 sm:pt-6">
 	<p class="text-darkGray text-xs mb-6"><BreadCrumbs {route} {params} /></p>
 	<div class="  flex flex-col rounded-lg text-darkGray sm:flex-row sm:justify-between gap-8">
+		<div class="flex justify-center flex-shrink-0">
+			<img src="/RSETI-info-graphic.svg" alt="RSETI-info-graphic" class="w-36" />
+		</div>
 		<div class="flex flex-col sm:w-3/4 gap-3">
-			<h1 class="uppercase-headers">
-				<!-- {$_('AboutRSETI')} -->
-				About Training Centers
+			<h1 class="text-base sm:text-2xl font-semibold text-primary relative">
+				{$_('AboutRSETI')}
 				<!-- <img src="/RSETI-text-decoration.svg" alt="RSETI-text-decoration" class="absolute right-0 top-0 -translate-y-1/2 translate-x-1/2"> -->
 			</h1>
-			<!-- <p class="text-sm mb-3 leading-loose">{$_('RsetiIntro')}</p> -->
-			<p class="text-sm mb-3 leading-loose">
-				Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-				labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-				laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
-				voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-				cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-			</p>
-		</div>
-		<div class="flex justify-center flex-shrink-0">
-			<img src="/rsetis.svg" alt="RSETI-info-graphic" class="w-56" />
+			<p class="text-sm mb-3 leading-loose">{$_('RsetiIntro')}</p>
 		</div>
 	</div>
 </div>
-<!-- <div class="max-w-7xl lg:mx-auto mb-8 mt-4 border-t border-"></div> -->
+<div class="max-w-7xl lg:mx-auto mb-8 mt-4 border-t border-accent"></div>

@@ -395,7 +395,7 @@
 												<button
 													on:click={() =>
 														handleActionDispatch(action?.actionName, data, action?.modal)}
-													class="text-orange-100 hover:text-indigo-900"
+													class="text-accent hover:text-indigo-900"
 													><div class="flex gap-0.5 items-start">
 														{#if action?.goto}
 															<a

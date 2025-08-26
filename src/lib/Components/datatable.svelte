@@ -8,9 +8,7 @@
 
 	export let notFoundMessage = 'Not found';
 	export let searchParameter = null;
-	export let iconColor = 'orange-100';
-	export let iconHoverColor = 'indigo-900';
-	$: console.log('iconHoverColor', iconHoverColor);
+
 	//------------ Datatable Component Usage---------------------------
 	// The datatable component handles searching, sorting and pagination
 	// tableHeaderDisplay property is a necessary property
@@ -413,9 +411,7 @@
 	<div class="flow-root">
 		<div class=" overflow-x-auto">
 			<div class="inline-block min-w-full align-middle">
-				<div
-					class="overflow-hidden shadow ring-1 ring-secondary ring-opacity-5 rounded-lg border border-gray-300"
-				>
+				<div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 rounded-lg">
 					<table class="min-w-full divide-y divide-gray-300">
 						<thead class="bg-primary">
 							<tr>
@@ -427,13 +423,17 @@
 											style={header.width ? `width:${header.width};` : 'width:100%;'}
 										>
 											<button
+												disabled={header.disableSort}
 												on:click={() => {
-													handleCreateSortAccordingToObject(header);
+													if (!header.disableSort) {
+														handleCreateSortAccordingToObject(header);
+													}
 												}}
 												class="px-4 text-left text-sm font-semibold text-white w-full flex items-center relative"
 												class:py-2={rowHeight === 'compact'}
 												class:py-3={rowHeight === 'normal'}
 												class:py-4={rowHeight === 'medium'}
+												class:cursor-not-allowed={header.disableSort}
 											>
 												<span class="">
 													{header.name}
@@ -469,7 +469,7 @@
 									class:py-3={rowHeight === 'normal'}
 									class:py-4={rowHeight === 'medium'}
 								>
-									<!-- <span class="sr-only">Action</span> -->
+									<span class="sr-only">Action</span>
 								</th>
 							</tr>
 						</thead>
@@ -499,7 +499,7 @@
 												{#each actionConfigObject as action}
 													<button
 														on:click={() => handleActionDispatch(action.actionName, data)}
-														class="text-{iconColor} hover:text-{iconHoverColor}"
+														class="text-accent hover:text-indigo-900"
 													>
 														<GoogleMatrialIcon iconName={action.actionIconName} />
 														<span class="sr-only">{action.actionName}</span></button

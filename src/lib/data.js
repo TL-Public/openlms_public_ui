@@ -459,7 +459,6 @@ export const tableData = [
 	}
 ];
 
-
 export const videoInfo = [
 	{
 		title: 'Mobile Phone Service-Changing Gorilla Glass',
@@ -516,24 +515,24 @@ export let states = [
 export const collaboratingInstitutes = [
 	{
 		institute: 'Ministry of Rural Development',
-		image: '/logos/google.png'
+		image: '/logos/mord.png'
 	},
 
 	{
 		institute: 'NABARD',
-		image: '/logos/facebook.png'
+		image: '/logos/nabard.png'
 	},
 	{
 		institute: 'National Academy of Rudseti',
-		image: '/logos/pinterest.png'
+		image: '/logos/nar.jpg'
 	},
 	{
 		institute: 'IIT Madras',
-		image: '/logos/slack.png'
+		image: '/logos/iit-logo.png'
 	},
 	{
 		institute: 'Rural Self Employment Training Institutes',
-		image: '/logos/microsoft.png'
+		image: '/logos/rseti-logo.png'
 	}
 ];
 
@@ -685,9 +684,52 @@ export const categoryList = {
 	hi: {
 		0: '-',
 		1: 'कृषि',
-		2: 'प्रक्रिया',
-		3: 'उत्पाद',
+		2: 'प्रक्रियात्मक',
+		3: 'उत्पादक',
 		4: 'सामान्य'
 	}
 };
 
+// ---------------- Helper Functions -----------------------
+/**
+ * Extracts the YouTube video ID from a given URL.
+ * This function attempts to handle various YouTube URL formats,
+ * including standard 'watch', 'youtu.be' shortlinks, 'embed' links,
+ * and mobile links. It uses regular expressions for robustness.
+ *
+ * @param {string} url - The YouTube URL string.
+ * @returns {string|null} The extracted video ID or null if not found.
+ */
+export const extractYouTubeVideoId = (url) => {
+    if (!url || typeof url !== 'string') {
+        return null;
+    }
+
+    // Regex patterns to match various YouTube URL formats
+    const patterns = [
+        // Standard watch URL: https://www.youtube.com/watch?v=VIDEO_ID
+        /youtube\.com\/.*[?&]v=([^&]+)/,
+        // youtu.be shortlink: https://youtu.be/VIDEO_ID
+        /youtu\.be\/([^?&]+)/,
+        // Embed URL: https://www.youtube.com/embed/VIDEO_ID
+        /youtube\.com\/embed\/([^?&]+)/,
+        // Old-style URL: https://www.youtube.com/v/VIDEO_ID
+        /youtube\.com\/v\/([^?&]+)/,
+        // youtube.com/yts/ and similar less common paths (e.g., from embeds)
+        /youtube\.com\/(?:yts|c|user)\/[^/]+\/([^?&]+)/
+    ];
+
+    for (const pattern of patterns) {
+        const match = url.match(pattern);
+        if (match && match[1]) {
+            // Return the matched ID, ensuring it's a valid YouTube ID length (11 chars)
+            // YouTube video IDs are typically 11 characters long
+            // if (match[1].length === 11) {
+                 return match[1];
+            // }
+        }
+    }
+
+    // If no pattern matches, return null
+    return null;
+};

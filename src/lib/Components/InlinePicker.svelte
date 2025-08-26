@@ -7,8 +7,7 @@
 	export let addClass = '';
 	export let alignment = 'L'; //L- for left and R for right
 	export let selectedItem = {};
-	export let defaultSortItem=''
-
+	export let defaultSortItem = '';
 
 	const dispatch = createEventDispatcher();
 	let dropDownRef;
@@ -21,16 +20,16 @@
 		selectedItem = item.name;
 		await tick();
 		dispatch('pickerSelection', item);
-		closeDropdown()
+		closeDropdown();
 	}
 
 	function closeDropdown() {
-    showDropdown = false;
-}
+		showDropdown = false;
+	}
 
 	onMount(() => {
-		if(defaultSortItem){
-			selectedItem=defaultSortItem
+		if (defaultSortItem) {
+			selectedItem = defaultSortItem;
 		}
 		document.addEventListener('click', handleClickOnDocument);
 		return () => {
@@ -40,12 +39,12 @@
 
 	function handleClickOnDocument(e) {
 		if (dropDownRef && !dropDownRef.contains(e.target)) {
-        closeDropdown();
-    }
+			closeDropdown();
+		}
 	}
 </script>
 
-<div class="relative inline-block text-right {addClass}" id="inline-picker"  bind:this={dropDownRef}>
+<div class="relative inline-block text-right {addClass}" id="inline-picker" bind:this={dropDownRef}>
 	<button
 		type="button"
 		class="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900"

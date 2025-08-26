@@ -6,20 +6,23 @@ export default {
 			fontSize: {
 				'3xl': '36px'
 			},
-			fontFamily: {
-				bebas: ['Bebas Neue', 'sans-serif'] // Add your Google Font here
-			},
 
 			screens: {
 				'bp-420px': '420px',
-				'bp-900px': '900px'
+				'bp-900px': '900px',
+				'bp-850px': '850px',
+				'bp-700px': '700px',
+				'bp-1050px': '1050px'
 			},
 
 			colors: {
 				primary: '#143164',
 				'primary-hover': '#435A83',
-				secondary: '#2E5ED4',
-
+				secondary: '#206FC9',
+				accent: '#3DC2EE',
+				'accent-hover': '#D2E2F4',
+				'accent-light': '#E9F7FD',
+				'accent-dark': '#2BA6CE',
 				yellow: '#FFBB12',
 				orange: {
 					10: '#FFF0E9',
@@ -38,13 +41,13 @@ export default {
 					10: '#ECF0F4'
 				},
 				blue: {
-					10: '#F6F9FF',
-					20: '#D2E2F4',
-					100: '#3DC2EE'
+					10: '#E9F1FA',
+					20: '#D2E2F4'
 				},
 				white: '#FFFFFF',
 				white80: '#FCFCFC',
 				white50: '#F6F6F6',
+				offwhite: '#fcfcfc',
 
 				fontFamily: {
 					noto: "'Noto-Sans', Inter"

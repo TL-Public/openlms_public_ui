@@ -2,8 +2,7 @@
 	import { createEventDispatcher } from 'svelte';
 	import { _ } from 'svelte-i18n';
 	export let sideBarList;
-	export let bgColor = '';
-	export let hoverColor = '';
+	export let bgColor;
 	export let category;
 
 	const dispatch = createEventDispatcher();
@@ -22,12 +21,12 @@
 	}
 </script>
 
-<div class="tracking-sm text-md h-full bg-blue-10">
+<div class="tracking-sm text-md h-full">
 	<ul class="flex flex-col gap-y-2.5 justify-start text-darkGray">
 		{#each sideBarList as sideBarItem, index (index)}
 			<div
-				class="hover:rounded-md hover:{hoverColor} {sideBarCategory == sideBarItem?.id
-					? `${bgColor} rounded-md text-white bg-secondary font-medium`
+				class="hover:rounded-md hover:{bgColor} {sideBarCategory == sideBarItem?.id
+					? `${bgColor} rounded-md`
 					: ''}"
 			>
 				<div
@@ -42,9 +41,8 @@
 			</div>
 		{/each}
 		{#if sideBarCategory}
-			<button
-				class="rounded-md {bgColor} text-white bg-secondary font-medium p-2"
-				on:click={handleDispatchClearFilter}>{$_('ClearFilter')}</button
+			<button class="rounded-md {bgColor} p-2" on:click={handleDispatchClearFilter}
+				>{$_('ClearFilter')}</button
 			>
 		{/if}
 	</ul>

@@ -1,11 +1,13 @@
 <script>
 	import { page } from '$app/stores';
+	import { onMount } from 'svelte';
 	import { format } from 'svelte-i18n';
 	import AboutDashboard from '$lib/dashboard/AboutDashboard.svelte';
 	import Tabs from '$lib/courses/Tabs.svelte';
 	import TraineeStatsContainer from '$lib/dashboard/TraineeStatsContainer.svelte';
 	import CourseStatsContainer from '$lib/dashboard/CourseStatsContainer.svelte';
 	import Assessment from '$lib/dashboard/Assessment.svelte';
+	import { setAuthStatus } from '$lib/utils/helper';
 
 	// Importing params and route for bread crumbs
 	export let data;
@@ -23,7 +25,8 @@
 		traineesByState,
 		stateData,
 		rsetiList,
-		lang
+		lang,
+		unauthorized
 	} = data;
 
 	let route = $page.route.id;
@@ -34,7 +37,7 @@
 			text: 'Course Stats',
 			component: CourseStatsContainer,
 			clicked: false,
-			textDispaly: $format('CourseStats'),
+			textDisplay: $format('CourseStats'),
 			historicalData: { coursesByState, overallStats },
 			lang: lang,
 			icon: '/coursesIcon.svg'
@@ -43,7 +46,7 @@
 			text: 'Trainee Stats',
 			component: TraineeStatsContainer,
 			clicked: false,
-			textDispaly: $format('Trainee Stats'),
+			textDisplay: $format('Trainee Stats'),
 			historicalData: {
 				traineesByCourse,
 				courseList,
@@ -59,13 +62,13 @@
 			},
 			lang: lang,
 			icon: '/traineesEnrolledIcon.svg'
-		}
+		},
 		// {
 		// 	text: 'Assessment',
 		// 	component: Assessment,
 		// 	clicked: false,
-		// 	textDispaly: $format('Assessment'),
-		// 	lang:lang,
+		// 	textDisplay: $format('Assessment'),
+		// 	lang: lang,
 		// 	icon: '/assessment.svg'
 		// }
 	];
@@ -78,7 +81,7 @@
 				text: 'Course Stats',
 				component: CourseStatsContainer,
 				clicked: false,
-				textDispaly: $format('CourseStats'),
+				textDisplay: $format('CourseStats'),
 				historicalData: { coursesByState, overallStats },
 				icon: '/coursesIcon.svg'
 			},
@@ -86,7 +89,7 @@
 				text: 'Trainee Stats',
 				component: TraineeStatsContainer,
 				clicked: false,
-				textDispaly: $format('TraineeStats'),
+				textDisplay: $format('TraineeStats'),
 				historicalData: {
 					traineesByCourse,
 					courseList,
@@ -101,22 +104,22 @@
 					rsetiList
 				},
 				icon: '/traineesEnrolledIcon.svg'
-			}
+			},
 			// {
 			// 	text: 'Assessment',
 			// 	component: Assessment,
 			// 	clicked: false,
-			// 	textDispaly: $format('Assessment'),
+			// 	textDisplay: $format('Assessment'),
 			// 	// historicalData: ,
 			// 	icon: '/assessment.svg'
 			// }
 		];
 	}
-	let componentToRender = tabs[0];
+	let componentToRender = tabs[1];
 
 	// Tab to remain selected on page load
-	let activeTabText = tabs[0]?.text;
-	let historicalData = tabs[0]?.historicalData;
+	let activeTabText = tabs[1]?.text;
+	let historicalData = tabs[1]?.historicalData;
 
 	function handleActiveTab(e) {
 		activeTabText = e.detail;
@@ -128,10 +131,17 @@
 		componentToRender = matchedObj;
 		historicalData = matchedObj?.historicalData;
 	}
+
+	onMount(() => {
+		setAuthStatus(unauthorized);
+	});
 </script>
 
-<AboutDashboard {params} {route} />
 <div class="lg:mx-[92px] mx-4 my-8 mt-0 lg:mb-9 lg:mt-0">
+	<div class="">
+		<AboutDashboard {params} {route} />
+	</div>
+
 	<div class="mb-4 sm:mb-6">
 		<Tabs bind:tabs on:handleActiveTab={handleActiveTab} {activeTabText} />
 	</div>

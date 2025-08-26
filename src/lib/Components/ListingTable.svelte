@@ -8,8 +8,8 @@
 	export let notFoundMessage = 'Not Found';
 	export let datatableCardConfig;
 	const dispatch = createEventDispatcher();
-	export let defaultSortItem;
-	export let selectedSortOption;
+	export let defaultSortItem
+	export let selectedSortOption
 	export let searchParameter;
 
 	// this object needs to be in accordance with the datatable sortAccordingTo object
@@ -63,6 +63,7 @@
 			rowHeight="compact"
 			{...$$restProps}
 			{searchParameter}
+
 		/>
 	{:else if loading}
 		<DatatableSkeleton />
@@ -82,7 +83,6 @@
 			{defaultSortItem}
 			{selectedSortOption}
 			{notFoundMessage}
-			{...$$restProps}
 		/>
 	{:else if tableData?.length === 0}
 		<ErrorComponent errorMessage={notFoundMessage} />

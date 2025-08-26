@@ -1,6 +1,7 @@
 <script>
 	// import  CourseCard  from '$lib/landingPageCourses/CourseCard.svelte';
 	import CourseCard from '$lib/courseListing/CourseCard.svelte';
+	import VideoPod from '$lib/VideoPod.svelte';
 	import { tick } from 'svelte';
 	export let cardsData = [];
 	// by default the scroll amount is calculated based on the width of the container
@@ -8,6 +9,9 @@
 	// if the scroll amount is to be calculated based on the width of the cards
 	export let scrollCardWidth = false;
 	export let scrollWidthMultiplier = 1;
+	export let componentType = 'courses';
+	export let componentWidth = 255; //255 is the width we maintain for course card
+	export let showProgressIcons = false;
 	let scrollAmount = 400;
 
 	// DOM reference to the scroll area
@@ -80,23 +84,29 @@
 <div class=" relative">
 	<div class="relative mx-auto max-w-7xl">
 		<div
-			class="grid grid-flow-col auto-cols-[minmax(min(255px,100%),255px)] sm:pb-5 pb-3 gap-2 sm:gap-4 overflow-x-auto relative scroll-smooth customized-scrollbar snap-inline"
+			class="flex overflow-x-auto relative scroll-smooth customized-scrollbar snap-inline gap-2 sm:gap-4 pb-3"
 			bind:this={scrollContainer}
 		>
 			{#each cardsData as cardData (cardData.uuid)}
-				<CourseCard course={cardData} />
+				<div class="flex-shrink-0" style="width: {componentWidth}px;">
+					{#if componentType === 'courses'}
+						<CourseCard course={cardData} />
+					{:else if componentType === 'videos'}
+						<VideoPod video={cardData} courseUuid={cardData?.courseDetails?.courseUuid} courseDetails={cardData?.courseDetails} selectedLanguage={cardData?.languageCode} textSize={'sm'} {showProgressIcons}/>
+					{/if}
+				</div>
 			{/each}
 		</div>
 		{#if scrollPostion > 0}
 			<button
-				class="sm:p-4 p-3 rounded-full text-2xl bg-secondary absolute top-1/2 -translate-x-8 -translate-y-1/2 sm:flex items-center shadow hidden"
+				class="sm:p-4 p-3 rounded-full text-2xl bg-gray-600 absolute top-1/2 -translate-x-8 -translate-y-1/2 sm:flex items-center shadow hidden"
 				on:click={() => handleScroll(-scrollAmount)}
 				><span class="material-icons-outlined text-center text-white">arrow_back_ios</span>
 			</button>
 		{/if}
 		{#if scrollPostion < maxScrollAmount}
 			<button
-				class="sm:p-4 p-3 rounded-full text-2xl bg-secondary absolute top-1/2 translate-x-8 -translate-y-1/2 right-0 sm:flex items-center shadow hidden"
+				class="sm:p-4 p-3 rounded-full text-2xl bg-gray-600 absolute top-1/2 translate-x-8 -translate-y-1/2 right-0 sm:flex items-center shadow hidden"
 				on:click={() => handleScroll(scrollAmount)}
 				><span class="material-icons-outlined text-center text-white">arrow_forward_ios</span>
 			</button>

@@ -72,7 +72,6 @@
 			{searchValue}
 			{tableHeaderDisplay}
 			notFoundMessage={$format('NoStateFound')}
-			iconColor="secondary"
 		/>
 	</div>
 </div>

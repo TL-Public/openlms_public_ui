@@ -8,32 +8,11 @@
 	box-sizing: border-box;
 }
 
-body {
-	font-family: 'Noto Sans', sans-serif;
-	margin: 0;
-	padding: 0;
-}
-
-@layer utilities {
-	.uppercase-headers {
-		@apply font-bebas font-medium text-primary  uppercase tracking-wide text-2xl sm:text-4xl  leading-tight sm:leading-tight md:leading-tight;
-	}
-	.uppercase-body-text {
-		@apply font-bebas font-medium text-primary  uppercase tracking-wide text-2xl sm:text-[30px]  leading-tight sm:leading-tight md:leading-tight;
-	}
-	.uppercase-small-text {
-		@apply font-bebas font-medium text-primary  uppercase tracking-wide text-2xl   leading-tight sm:leading-tight md:leading-tight;
-	}
-
-	.primary-btn {
-		@apply text-sm lg:text-sm rounded-[4px] font-medium text-white bg-secondary px-6 py-2;
-	}
-	.secondary-btn {
-		@apply text-sm lg:text-sm rounded-[4px] font-medium text-white bg-primary px-6 py-2;
-	}
-	.tertiary-btn {
-		@apply text-sm lg:text-sm rounded-[4px] font-medium text-primary bg-blue-20 border border-secondary px-6 py-2;
-	}
+section {
+	/* These styles are for initial demarcation of components only, not part of the actual UI. Delete once done. */
+	height: 8rem;
+	border: 2px solid brown;
+	text-align: center;
 }
 
 .customized-scrollbar::-webkit-scrollbar {
@@ -45,7 +24,7 @@ body {
 /* Add a thumb */
 .customized-scrollbar::-webkit-scrollbar-thumb {
 	border-radius: 10px;
-	background-color: #3dc2ee;
+	background-color: #3DC2EE;
 }
 
 .snap-inline {
@@ -64,3 +43,36 @@ body {
 	color: rgba(255, 255, 255, 1);
 }
 /* ---- CSS for datable header end ---- */
+
+
+@layer utilities {
+	.primary-btn {
+		@apply text-sm lg:text-sm rounded-[4px] font-medium text-white bg-primary px-6 py-2 text-center;
+	}
+
+
+	.heading-L {
+		@apply text-base font-semibold text-primary;
+	}
+	.helper-text {
+		@apply text-xs text-gray-90;
+	}
+	.label {
+		@apply text-sm capitalize font-medium;
+	}
+	.shadow-subtle {
+		box-shadow:
+			0 1px 3px rgba(0, 0, 0, 0.1),
+			0 1px 2px rgba(0, 0, 0, 0.06);
+	}
+
+	.horizontal-line {
+		@apply border-t border-gray-50;
+	}
+
+	@media (max-width: 640px) {
+		.form {
+			@apply py-4;
+		}
+	}
+}

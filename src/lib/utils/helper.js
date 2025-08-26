@@ -1,4 +1,11 @@
+import { showLoginModal, user } from '/src/stores';
+
 export function formatDurationHHMM(seconds) {
+	if (seconds < 60) {
+		if(seconds === null) return `0min 0s`
+		return `0min ${seconds}s`;
+	}
+
 	const minutes = Math.floor(seconds / 60);
 	const remainingSeconds = seconds % 60;
 	const hours = Math.floor(minutes / 60);
@@ -8,12 +15,31 @@ export function formatDurationHHMM(seconds) {
 		if (mins === 0) return `${hours}hr`;
 		return `${hours}hr ${mins}mins`;
 	}
+
 	if (mins > 1) {
-		if (remainingSeconds === 0) return `${mins} mins`;
+		if (remainingSeconds === 0) return `${mins}mins`;
 		return `${mins}mins ${remainingSeconds}s`;
 	} else {
-		return `0 mins`;
+		return `${mins}min ${remainingSeconds}s`;
 	}
+}
+
+export function formatDurationExcludingSeconds(seconds) {
+	if (seconds < 60) {
+		const mins = Math.ceil(seconds / 60);
+		return `${mins}min`;
+	}
+
+	const minutes = Math.floor(seconds / 60);
+	const hours = Math.floor(minutes / 60);
+	const mins = minutes % 60;
+
+	if (hours > 0) {
+		if (mins === 0) return `${hours}hr`;
+		return `${hours}hr ${mins}min`;
+	}
+
+	return `${minutes}min`;
 }
 
 export function formatDate_YYYY_MM_DD_to_DD_MM_YYYY(date) {
@@ -108,15 +134,20 @@ export const formatDateMMMYYYY = (date) => {
 	return `${monthNames[d.getMonth()]}-${d.getFullYear()}`;
 };
 
-export function extractYouTubeVideoId(url) {
-	// Regular expression to match YouTube video URLs in various formats
-	const youtubeRegex =
-		/^(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=)|youtu\.be\/)([^#&?]*).*/;
-	const match = url?.match(youtubeRegex);
+export function getHeaders(cookies) {
+	const authToken = cookies.get('authToken');
+	if (authToken) {
+		const headers = {
+			Authorization: `Bearer ${authToken}`
+		};
+		return headers;
+	}
+	return {};
+}
 
-	if (match && match[1]) {
-		return match[1];
-	} else {
-		return null; // Or handle the error case as needed
+export function setAuthStatus(unauthorized) {
+	if (unauthorized === true) {
+		showLoginModal.set(true);
+		user.update((user) => ({ ...user, tokenExpired: true }));
 	}
 }

@@ -15,13 +15,13 @@
 </script>
 
 <div class=" flex-col flex h-full">
-	<h1 class="uppercase-body-text pb-2 break-words">
+	<h1 class="text-primary text-base sm:text-2xl font-bold pb-2 leading-6 capitalize break-words">
 		{videoDetails.name}
 	</h1>
 	<div class="flex flex-col gap-4 sm:gap-6 justify-between flex-1">
 		<div>
 			<div class="flex flex-col gap-4 sm:gap-6">
-				<p class="text-xs sm:text-sm leading-6 hyphens-auto break-all">
+				<p class="text-xs sm:text-sm leading-6  hyphens-auto break-all ">
 					{videoDetails?.description ?? ''}
 				</p>
 				<p class="text-xs sm:text-sm mb-2">{videoDetails?.views ?? '-'} &nbsp;{$format('views')}</p>
@@ -44,14 +44,14 @@
 		<div>
 			{#if testimonials?.length > 0}
 				<TestimonialCarousel quotes={testimonials} component={SingleTestimonialItem} />
-			{:else}
+			<!-- {:else}
 				<div class="border border-primary p-4 rounded-md bg-blue-50">
 					<p class="text-sm">
 						<img src="/DoubleQuote.svg" alt="double quote" class="w-5 mb-2" />
 						{quote?.quote}
 					</p>
 					<h4 class="text-end text-sm">- {quote?.author}</h4>
-				</div>
+				</div> -->
 			{/if}
 		</div>
 	</div>

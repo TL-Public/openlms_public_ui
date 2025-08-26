@@ -18,7 +18,6 @@
 	export let showPlannedDate = false;
 
 	let dummyCourseCardDetails = new Array(5);
-
 	$: handleFilter(sideBarCategory, searchValue, coursesCopy, selectedSortOption);
 	function handleFilter() {
 		if (coursesCopy?.length > 0) {
@@ -40,6 +39,7 @@
 					error = 'No Data Found';
 				}
 			}
+
 			// Now once the the filtering is done sort them
 			if (selectedSortOption) {
 				localFilteredCopy = sortCourses(localFilteredCopy, selectedSortOption);
@@ -81,19 +81,19 @@
 					return b?.title?.localeCompare(a?.title);
 				});
 
-			case Course_Sorting_Order.PLANNED_DATE_LOW_TO_HIGH:
-				return arrayToSort?.sort((a, b) => {
-					const dateA = a?.startDate;
-					const dateB = b?.startDate;
-					return dateA - dateB;
-				});
+			// case Course_Sorting_Order.PLANNED_DATE_LOW_TO_HIGH:
+			// 	return arrayToSort?.sort((a, b) => {
+			// 		const dateA = a?.startDate;
+			// 		const dateB = b?.startDate;
+			// 		return dateA - dateB;
+			// 	});
 
-			case Course_Sorting_Order.PLANNED_DATE_HIGH_TO_LOW:
-				return arrayToSort?.sort((a, b) => {
-					const dateA = a?.startDate;
-					const dateB = b?.startDate;
-					return dateB - dateA;
-				});
+			// case Course_Sorting_Order.PLANNED_DATE_HIGH_TO_LOW:
+			// 	return arrayToSort?.sort((a, b) => {
+			// 		const dateA = a?.startDate;
+			// 		const dateB = b?.startDate;
+			// 		return dateB - dateA;
+			// 	});
 		}
 	}
 
@@ -115,7 +115,7 @@
 {#if !loading}
 	{#if error == null}
 		<div
-			class=" grid grid-cols-[repeat(auto-fit,minmax(min(255px,100%),255px))] justify-center bp-900px:justify-start xl:justify-start gap-4"
+			class=" grid grid-cols-[repeat(auto-fit,minmax(min(249px,100%),249px))] justify-center bp-900px:justify-start xl:justify-start gap-4"
 		>
 			{#each filteredCourses as course, index (index)}
 				<CourseCard {course} {showPlannedDate} />

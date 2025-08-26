@@ -46,7 +46,11 @@
 			<button on:click={handleClearFilter} class="text-sm font-semibold text-secondary"
 				>{$_('ClearFilter')}</button
 			>
-			<button on:click={handleApplyFilter} class="secondary-btn">{$_('ApplyFilters')}</button>
+			<button
+				on:click={handleApplyFilter}
+				class="text-sm rounded-[4px] font-semibold text-white bg-primary px-6 py-2"
+				>{$_('ApplyFilters')}</button
+			>
 		</div>
 	</div>
 </div>

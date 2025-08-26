@@ -84,7 +84,7 @@
 
 <InsightsContainer {insightStats} />
 
-<div class=" mt-4 p-4 bg-white80 shadow-md my-4 rounded-lg">
+<div class=" mt-4 p-4 bg-white my-4 rounded">
 	<MapAndTableWrapper
 		stateID={stateIDCourses}
 		stateName={stateNameCourses}
@@ -94,7 +94,7 @@
 		heatMapStartingColorGradient={0xc7d2fe}
 		heatMapEndingColorGradient={0x312e81}
 		tableHeaderDisplay={tableHeaderDisplayCourses}
-		mapHeader={$format('CourseDistribution')}
+		mapHeader={$format('CourseDistribution')+ ' (2023)'}
 		tableHeading={$format('StateRanking')}
 		placeholderForSearch={$format('SearchByState')}
 	/>
@@ -104,9 +104,9 @@
 	<div class="">
 		<Top10CoursesCard />
 	</div>
-</div>
+</div> -->
 
-<div class="">
+<!-- <div class="">
 	<div class="">
 		<Top10VideosCardcopy />
 	</div>

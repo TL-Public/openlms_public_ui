@@ -19,7 +19,7 @@
 	<div class="pb-2 transition-all duration-300 ease-in-out">
 		<dt
 			class="border-gray100 border-2 px-2 py-2 rounded-lg"
-			class:bg-blue-20={expanded}
+			class:bg-blue-10={expanded}
 			class:bg-white={!expanded}
 			class:border-none={border === 'border-none'}
 		>
@@ -30,7 +30,6 @@
 				on:keydown={(e) => handleClick(e)}
 				type="button"
 				class="outerAccordion flex w-full items-start justify-between text-left text-gray-900 px-2 sm:px-3"
-				class:font-semibold={expanded}
 				aria-controls="accordion-{index}"
 				aria-expanded={expanded}
 				tabindex={sideBarItem?.id}
@@ -51,7 +50,7 @@
 							viewBox="0 0 24 24"
 							stroke-width="1.5"
 							stroke="currentColor"
-							class="outerAccordion size-4 text-secondary"
+							class="outerAccordion size-4 text-accent"
 						>
 							<path stroke-linecap="round" stroke-linejoin="round" d="m4.5 15.75 7.5-7.5 7.5 7.5" />
 						</svg>
@@ -66,7 +65,7 @@
 							viewBox="0 0 24 24"
 							stroke-width="1.5"
 							stroke="currentColor"
-							class="outerAccordion size-4 text-secondary"
+							class="outerAccordion size-4 text-accent"
 						>
 							<path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
 						</svg>

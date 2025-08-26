@@ -4,11 +4,14 @@
 	import ErrorComponent from '$lib/Components/ErrorComponent.svelte';
 	import { format } from 'svelte-i18n';
 	import Filter from '$lib/Components/Filter.svelte';
+
 	export let traineesByState = []; // Incoming data in the specified format
 	export let rsetiList = []; // Incoming data in the specified format
+
 	export let lang = 'en';
 	export let traineeOnBoardTotal = [];
 	export let rsetiTraineeOnBoardData = {};
+
 	let selectedRseti = -1; // Default selection
 	let labels = [];
 	let data = [];
@@ -28,6 +31,7 @@
 			}
 		]
 	};
+
 	let chartOptions = {
 		responsive: true,
 		maintainAspectRatio: false,
@@ -89,47 +93,56 @@
 			}
 		}
 	};
+
 	let error = null;
 	$: if (rsetiTraineeOnBoardData?.status !== 200) {
-		error = rsetiTraineeOnBoardData.error || 'Failed to fetch data';
+		error = rsetiTraineeOnBoardData.error || $format('NoDataFound');
+		
 	} else if (rsetiTraineeOnBoardData?.length === 0) {
-		error = 'No data found';
-	} else {
-		error = null;
+		error = $format('NoDataFound');
 	}
+
 	function updateChart(rsetiId) {
 		// selectedState = rsetiId;
 		selectedRseti = rsetiId;
 		// Clear previous error
 		error = null;
+
 		if (!rsetiTraineeOnBoardData || rsetiTraineeOnBoardData?.data?.length === 0) {
-			error = 'No data found';
+			error = $format('NoDataFound');
 			return;
 		}
+
 		// Handle filtering
 		let filteredData =
 			rsetiId === Number(-1)
 				? traineeOnBoardTotal
 				: rsetiTraineeOnBoardData?.data?.filter((item) => item.id == rsetiId);
+
 		filteredData = filteredData?.sort((a, b) => a.year - b.year);
+
 		if (!filteredData || filteredData.length === 0) {
 			error =
 				rsetiId === -1
-					? 'No data found' // No data for all states
-					: 'No data found for the selected training center'; // No data for a specific state
+					? $format('NoDataFound') // No data for all states
+					: $format('NoDataFoundForSelectedTC'); // No data for a specific RSETi
 			return;
 		}
+
 		// Transform data
 		const allYears = {};
 		const traineesCnt = [];
+
 		filteredData?.forEach(({ year, trainedCount }) => {
 			if (!allYears[year]) {
 				allYears[year] = year;
 			}
 			traineesCnt.push(trainedCount);
 		});
+
 		labels = Object.keys(allYears); // Month names
 		data = traineesCnt; // Trainee counts
+
 		// Update chart data
 		chartData = {
 			labels,
@@ -144,11 +157,14 @@
 			]
 		};
 	}
+
 	updateChart(-1);
-	// Generate course options
+
+	let allTrainingCenters = $format('AllTrainingCenters');
 	function transformRsetiList(rsetis) {
 		if (rsetis?.length > 0) {
-			let fullList = [{ uuid: -1, name: 'All Training Centers' }, ...rsetis];
+			let fullList = [{ uuid: -1, name: allTrainingCenters }, ...rsetis];
+
 			return fullList
 				.map((rseti) => ({
 					id: rseti.uuid,
@@ -160,10 +176,15 @@
 					return a?.name?.localeCompare(b?.name); // Sort the rest alphabetically
 				});
 		}
-		return [];
+
+		return [
+			{ id: -1, name: allTrainingCenters }
+		];
 	}
+
 	let rsetiOptions = transformRsetiList(rsetiList);
 </script>
+
 <div class="bg-white w-full flex flex-col py-4 md:py-8 px-4 md:px-16 rounded-lg">
 	<div class="flex flex-col md:flex-row justify-between gap-2 md:gap-0">
 		<div>

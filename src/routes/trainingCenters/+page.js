@@ -9,14 +9,22 @@ export const load = async ({ fetch, parent, locals }) => {
 
 	// fetch the course details form the /apis route
 	const fetchCourses = async () => {
+		let displayText=''
 		try {
 			let data = parentData?.allCoursesData ?? [];
+			
+			if(lang === 'en'){
+				displayText = String_Constants.ALL_COURSES
+			} else{
+				displayText = String_Constants.ALL_COURSES_HI
+			}
+		
 
 			// Adding all courses option to the list
 			if (data?.length > 0) {
 				data = [
 					{
-						title: String_Constants.ALL_COURSES,
+						title: displayText,
 						uuid: 0
 					},
 					...data
@@ -25,7 +33,7 @@ export const load = async ({ fetch, parent, locals }) => {
 				// return an option list with no course found
 				return [
 					{
-						title: String_Constants.NO_COURSE_FOUND,
+						title: displayText,
 						uuid: 0
 					}
 				];
@@ -35,7 +43,7 @@ export const load = async ({ fetch, parent, locals }) => {
 		} catch (err) {
 			return [
 				{
-					title: String_Constants.NO_COURSE_FOUND,
+					title: displayText,
 					uuid: 0
 				}
 			];

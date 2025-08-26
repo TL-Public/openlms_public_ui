@@ -26,8 +26,44 @@
 	// 	return flattenedData;
 	// }
 	let flattenedCentersData = centersData;
-	let filteredCentersData = flattenedCentersData;
 
+	$: flattenedCentersData = mergeCentersByUuid(centersData);
+	function mergeCentersByUuid(data) {
+		const centerMap = new Map();
+
+		for (const center of data) {
+			const { uuid, plannedDate, startDateObj } = center;
+
+			if (!centerMap.has(uuid)) {
+				centerMap.set(uuid, {
+					...center,
+					plannedDates: new Set([plannedDate]),
+					startDates: [startDateObj]
+				});
+			} else {
+				const existing = centerMap.get(uuid);
+				existing.plannedDates.add(plannedDate);
+				existing.startDates.push(startDateObj);
+			}
+		}
+
+		return Array.from(centerMap.values()).map((center) => {
+			const sortedPlannedDates = Array.from(center.plannedDates).sort((a, b) => {
+				const dateA = new Date(`01-${a}`);
+				const dateB = new Date(`01-${b}`);
+				return dateA - dateB; 
+			});
+
+			return {
+				...center,
+				plannedDate: sortedPlannedDates.join(', '),
+				startDateObj: center.startDates.sort()[0] 
+			};
+		});
+	}
+
+	$: filteredCentersData = flattenedCentersData;
+	
 	// // update the data if center data is changes ( this might not be needed )
 	// $: {
 	// 	flattenedCentersData = createFlattenedCenterData(centersData);
@@ -52,7 +88,7 @@
 		{
 			key: 'plannedDate',
 			name: 'Planned Date',
-			sortKey: 'startDateObj'
+			disableSort: true
 		}
 	];
 	let cardHeaderDisplay = {
@@ -68,7 +104,7 @@
 			{
 				key: 'plannedDate',
 				name: 'Planned Date',
-				sortKey: 'startDateObj'
+				disableSort: true
 			}
 		]
 	};
@@ -88,7 +124,7 @@
 			{
 				key: 'plannedDate',
 				name: 'Planned Date',
-				sortKey: 'startDateObj'
+				disableSort: true
 			}
 		];
 
@@ -105,7 +141,7 @@
 				{
 					key: 'plannedDate',
 					name: 'Planned Date',
-					sortKey: 'startDateObj'
+					disableSort: true
 				}
 			]
 		};
@@ -158,11 +194,15 @@
 	};
 </script>
 
-<Filters stateFilterOptionList={statesData} on:handleFilters={handleFilter} />
+<Filters
+	stateFilterOptionList={statesData}
+	stateFilterValue={statesData[0]?.name}
+	on:handleFilters={handleFilter}
+/>
 <div class="mt-6">
 	<SearchBar
 		on:handleSearchValue={sendSearchValueToDatatable}
-		placeholder={$_('SearchByTitle')}
+		placeholder={$_('SearchByRSETIName')}
 		searchButton={false}
 	/>
 </div>
@@ -177,7 +217,6 @@
 			bind:sortAccordingTo
 			rowHeight="compact"
 			searchParameter="name"
-			iconColor="secondary"
 		/>
 	{:else}
 		<ErrorComponent errorMessage={$format('NoTCFound')} />

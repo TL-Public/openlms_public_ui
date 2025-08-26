@@ -2,11 +2,12 @@ import { error, fail } from '@sveltejs/kit';
 import { BASE_URL } from '$lib/config';
 
 export const actions = {
-  default: async ({ request, fetch, cookies }) => {
-    try {
+	default: async ({ request, fetch, cookies }) => {
+		try {
+			let token;
 			const formData = await request.formData();
 			const enrollmentId = formData.get('enrollmentId');
-			const uniqueId = formData.get('password'); // Assuming the name for the unique pin is 'password'
+			const uniqueId = formData.get('password'); 
 			const rseti = formData.get('rseti');
 
 			// Validate the input fields
@@ -18,14 +19,11 @@ export const actions = {
 			}
 
 			// Make the API call
-			const response = await fetch(
-				`${BASE_URL}/apis/v1/auth/signin`,
-				{
-					method: 'POST',
-					headers: { 'Content-Type': 'application/json' },
-					body: JSON.stringify({ username: enrollmentId, password: uniqueId })
-				}
-			);
+			const response = await fetch(`${BASE_URL}/apis/v1/auth/signin`, {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ username: enrollmentId, password: uniqueId })
+			});
 
 			if (!response.ok) {
 				const responseError = await response.json();
@@ -37,12 +35,26 @@ export const actions = {
 
 			// Parse the API response
 			const result = await response.json();
-
+			
 			// Redirect or handle successful login
 			if (result.accessToken) {
 				//call trainee-profile api
-				const token = result.accessToken;
+				token = result.accessToken;
 
+				const userDetailsResponse = await fetch(`${BASE_URL}/apis/v1/trainee-profiles/profile`, {
+					method: 'GET',
+					headers: {
+						Authorization: `Bearer ${token}`
+					}
+				});
+
+				if (!userDetailsResponse.ok) {
+					return fail(500, { error: 'Failed to fetch user details' });
+				}
+
+				const userDetails = await userDetailsResponse.json();
+
+				// authtoken is set here because if the trainee profile is not fetched successfully, we don't want to set the cookies
 				cookies.set('authToken', token, {
 					path: '/',
 					httpOnly: true,
@@ -50,22 +62,6 @@ export const actions = {
 					secure: process.env.NODE_ENV === 'production',
 					maxAge: 60 * 60 * 24
 				});
-
-				const userDetailsResponse = await fetch(
-					`${BASE_URL}/apis/v1/trainee-profiles/profile`,
-					{
-						method: 'GET',
-						headers: {
-							Authorization: `Bearer ${token}`
-						}
-					}
-				);
-
-				if (!userDetailsResponse.ok) {
-					return fail(500, { error: 'Failed to fetch user details' });
-				}
-
-				const userDetails = await userDetailsResponse.json();
 
 				cookies.set('userUuid', userDetails.uuid, {
 					path: '/',
@@ -89,12 +85,26 @@ export const actions = {
 					secure: process.env.NODE_ENV === 'production',
 					maxAge: 60 * 60 * 24
 				});
+				cookies.set('videoPreferredLanguage', userDetails.videoPreferredLanguage, {
+					path: '/',
+					httpOnly: true,
+					sameSite: 'strict',
+					secure: process.env.NODE_ENV === 'production',
+					maxAge: 60 * 60 * 24
+				});
+				cookies.set('language', userDetails.preferredLanguage, {
+					path: '/',
+					httpOnly: false,
+					sameSite: 'strict',
+					secure: process.env.NODE_ENV === 'production',
+					maxAge: 60 * 60 * 24
+				});
 
 				return {
 					success: true,
 					message: 'Login successful!',
-					// authToken: result.accessToken,
-					user: userDetails
+					user: userDetails,
+					lang: userDetails.preferredLanguage ? userDetails.preferredLanguage : cookies.get('language')
 				};
 			} else {
 				return fail(401, {
@@ -106,5 +116,4 @@ export const actions = {
 			throw error(500, 'An unexpected error occurred. Please try again later.');
 		}
 	}
-  }
-
+};

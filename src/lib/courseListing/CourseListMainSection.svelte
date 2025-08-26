@@ -3,7 +3,7 @@
 	import { Course_Sorting_Order } from '/src/config/constants.js';
 	import { onMount, tick } from 'svelte';
 	import { Sorting_Orders } from '../../config/constants';
-	import { categoryList } from '$lib/data.js'
+	import { categoryList } from '$lib/data.js';
 	import SearchBar from '$lib/Components/SearchBar.svelte';
 	import { _ } from 'svelte-i18n';
 	import Sidebar from '$lib/faq/Sidebar.svelte';
@@ -64,8 +64,8 @@
 	}
 
 	onMount(async () => {
-		selectedSortOptionDisplayName = sortActionItems[0]?.displayName;
-		selectedSortOption = sortActionItems[0]?.name;
+		selectedSortOptionDisplayName = sortActionItems[5]?.displayName;
+		selectedSortOption = sortActionItems[5]?.name;
 		expandedItem = category;
 
 		const categorySet = new Set();
@@ -131,7 +131,7 @@
 			<SearchBar
 				on:handleSearchValue={handleSearch}
 				searchButton={false}
-				placeholder={$format('SearchByTitle')}
+				placeholder={$format('SearchByCourseTitle')}
 				bind:searchBoxValue={searchValue}
 			/>
 			{#if selectedSortOption && searchValue}
@@ -166,7 +166,7 @@
 			>
 				<p class="mt-2 text-sm leading-7 text-darkgray font-normal px-2 pb-4" id="innerAccordion">
 					<!-- scroll amount only applies when scroll arrows are visible (desktop view) hence no need to pass scrollClientWidth and scrollCardWidth -->
-					<HorizontalScroll cardsData={filteredCardsData} />
+					<HorizontalScroll cardsData={filteredCardsData}  componentWidth = {255} />
 				</p>
 			</SingleAccordionElementMobileView>
 		{:else}
@@ -190,12 +190,11 @@
 <div class="hidden xl:block xl:mx-[92px] xl:mb-16">
 	<div class="flex gap-2">
 		<div
-			class="w-1/4 h-fit max-w-[250px] text-sm shadow-lg p-4 lg:p-0 xl:p-4 rounded-md border-none bg-blue-10"
+			class="w-1/4 h-fit max-w-[230px] text-sm shadow-lg p-4 lg:p-0 xl:p-4 rounded-md border-none bg-white"
 		>
 			{#if !loading}
 				<Sidebar
-					bgColor={'bg-secondary'}
-					hoverColor={'bg-blue-10'}
+					bgColor={'bg-blue-10'}
 					on:handleSideBarCategory={handleSidebarClick}
 					on:handleDispatchClearFilter={handleSidebarClearFilter}
 					sideBarList={coursesSideBarList}
@@ -205,12 +204,12 @@
 				<SidebarSkeleton />
 			{/if}
 		</div>
-		<div class="w-3/4 px-2">
+		<div class="w-3/4 px-2 flex-grow">
 			<div class=" mb-2 grid sm:grid-cols-2 grid-cols-[1fr auto] place-items-start">
 				<div class="flex flex-col w-full">
 					<SearchBar
 						on:handleSearchValue={handleSearch}
-						placeholder={$format('SearchByTitle')}
+						placeholder={$format('SearchByCourseTitle')}
 						searchButton={false}
 						bind:searchBoxValue={searchValue}
 					/>
@@ -227,7 +226,7 @@
 					on:pickerSelection={handleSort}
 					optionList={sortActionItems}
 					addClass={'justify-self-end'}
-					defaultSortItem={sortActionItems[0]?.name}
+					defaultSortItem={sortActionItems[5]?.name}
 				/>
 			</div>
 

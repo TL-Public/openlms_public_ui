@@ -10,14 +10,14 @@
 	import FaqIcon from '$lib/svgComponents/FAQIcon.svelte';
 	import LoginIcon from '$lib/svgComponents/LoginIcon.svelte';
 	import DashboardIcon from '$lib/svgComponents/DashboardIcon.svelte';
-
+	import HomeIcon from '$lib/svgComponents/HomeIcon.svelte';
+	import { goto } from '$app/navigation';
 
 	export let burgerMenuOpen;
 	export let menuItemClicked;
 	export let loggedIn;
 	export let languageSelected = 'English';
 	export let languageOptionList;
-	export let displayLoginPopUp = false
 
 	const dispatch = createEventDispatcher();
 
@@ -30,6 +30,10 @@
 		}
 	}
 
+	function handleGoToProfile() {
+		goto('/profile');
+	}
+
 	function handleLocaleChange(event) {
 		dispatch('selectLang', event.detail);
 	}
@@ -37,14 +41,15 @@
 	async function logout() {
 		try {
 			const resp = await fetch('/apis/auth/logout', { method: 'POST' });
+
 			const logoutResp = await resp.json();
-			// loggedIn = false;
 			user.set({ isAuthenticated: false });
 		} catch (err) {}
 	}
+
 	function handleDisplayLoginPopUp() {
 		if (!loggedIn) {
-			displayLoginPopUp = !displayLoginPopUp;
+			dispatch('setDisplayLoginPopUpState', true);
 		} else {
 			//logout
 			logout();
@@ -56,7 +61,7 @@
 
 <!-- top-20 comes from the height of header + its padding -->
 <div
-	class=" md:hidden fixed w-full top-20 z-20 mx-0 flow-root h-full bg-white transition-all ease-in-out duration-500"
+	class=" bp-850px:hidden fixed w-full top-20 z-[999] mx-0 flow-root h-full bg-white transition-all ease-in-out duration-500"
 	class:translate-x-0={burgerMenuOpen}
 	class:translate-x-full={!burgerMenuOpen}
 >
@@ -68,19 +73,31 @@
 				on:keypress={handleMenuItemClick}
 			>
 				{#if $user?.name}
-					<li class=" w-full flex gap-4 items-center mt-auto h-16 border-b pl-4">
+					<li class="w-full flex gap-4 items-center mt-auto h-20 border-b pl-4 mb-2">
+						<!-- Avatar on the Left -->
 						<div
-							class="flex items-center justify-center w-8 h-8 bg-[#2E5ED4] font-medium text-white capitalize text-xl rounded-full leading-none m-0 p-0"
+							class="flex items-center justify-center w-10 h-10 bg-accent font-medium text-white capitalize text-xl rounded-full"
 						>
 							{$user?.name ? $user.name[0] : ''}
 						</div>
-						<span>
-							Hi, <span class="font-medium">
-								{$user?.name}
-							</span>
-						</span>
+
+						<!-- Name & View Profile stacked on the Right -->
+						<div class="flex flex-col">
+							<span class="font-medium">{$_('Hi')}, {$user?.name}</span>
+							<!-- <div
+								class="text-sm text-blue-600 underline hover:text-blue-800 hover:cursor-pointer"
+								on:click={handleGoToProfile}
+							>
+								{$_('View Profile')}
+							</div> -->
+						</div>
 					</li>
 				{/if}
+				<SideMenuItem id="home">
+					<HomeIcon slot="icon" size={32} />
+					<a href="/" id="home" class="block w-full h-full" slot="link">{$_('Home')}</a
+					>
+				</SideMenuItem>
 				<SideMenuItem id="courses">
 					<CoursesIcon slot="icon" addClass="h-8 w-8 " />
 					<a href="/courses" id="courses" class="block w-full h-full" slot="link">{$_('Courses')}</a
@@ -100,14 +117,24 @@
 					<DashboardIcon addClass="h-8 w-8 " slot="icon" />
 					<a href="/public-dashboard" class="block w-full h-full" slot="link">{$_('Dashboard')}</a>
 				</SideMenuItem>
+				<SideMenuItem id="about-us">
+					<DashboardIcon addClass="h-8 w-8 " slot="icon" />
+					<a href="/aboutUs" class="block w-full h-full" slot="link">{$_('AboutUs')}</a>
+				</SideMenuItem>
+				<!-- <SideMenuItem id="test-page">
+					<DashboardIcon addClass="h-8 w-8 " slot="icon" />
+					<a href="/test-page" class="block w-full h-full" slot="link">Test Page</a>
+				</SideMenuItem> -->
 				<SideMenuItem addClass="w-full p-2" id="login">
 					<LoginIcon addClass="h-8 w-8 " slot="icon" />
 					<button href="#" class="block" on:click={handleDisplayLoginPopUp} slot="link"
 						>{loggedIn ? $_('Logout') : $_('Login')}
 					</button>
 				</SideMenuItem>
+
 				<SideMenuItem class="p-2 flex items-center gap-4 languagePicker pl-4">
 					<img src="/language.svg" alt="language-select-icon" class="languagePicker" slot="icon" />
+
 					<SelectInput
 						showFieldName={false}
 						bind:itemSelected={languageSelected}

@@ -4,7 +4,7 @@
 </script>
 
 <div
-	class={`border-blue-100 ${position} ${addClass} top-0 left-0 border-t-[3px] z-[1000] loader`}
+	class={`border-accent ${position} ${addClass} top-0 left-0 border-t-[3px] z-[1000] loader`}
 ></div>
 
 <style>

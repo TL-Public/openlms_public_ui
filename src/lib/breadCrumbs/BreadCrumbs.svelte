@@ -2,7 +2,7 @@
 	import { format } from 'svelte-i18n';
 	export let route = '';
 	export let params = [];
-	export let searchParams = '';
+	export let searchParams=''
 
 	let newRoute = route && route.slice('1');
 	let breadCrumbsArr = [{ crumb: $format('home_route'), path: '/' }];
@@ -10,7 +10,7 @@
 	$: createBreadCrumbArray($format);
 
 	function createBreadCrumbArray() {
-		href = '';
+		href=''
 		newRoute = route && route.slice('1');
 		newRoute = newRoute && newRoute.split('/');
 		breadCrumbsArr = [{ crumb: $format('home_route'), path: '/' }];
@@ -19,7 +19,7 @@
 				if (element?.startsWith('[')) {
 					let [paramValue] = Object.values(params);
 					href = href + '/' + paramValue;
-					breadCrumbsArr[index].path = href;
+					breadCrumbsArr[index].path = href 
 				} else {
 					href = href + '/' + element;
 					let elementLanguageKey = element + '_route';
@@ -28,13 +28,14 @@
 						crumb: $format(elementLanguageKey),
 						path: href
 					});
+				
 				}
 			});
+			
+			if(searchParams){
+				breadCrumbsArr[breadCrumbsArr.length-1].path=breadCrumbsArr[breadCrumbsArr.length-1].path+searchParams
+			}
 
-		if (searchParams) {
-			breadCrumbsArr[breadCrumbsArr.length - 1].path =
-				breadCrumbsArr[breadCrumbsArr.length - 1].path + searchParams;
-		}
 	}
 </script>
 
@@ -48,7 +49,7 @@
 							href={breadCrumb?.path}
 							class=" text-xs lg:text-sm hover:text-gray-700 capitalize {index ===
 							breadCrumbsArr?.length - 1
-								? 'text-primary font-semibold'
+								? 'text-darkGray font-semibold'
 								: 'text-gray-90'} ">{breadCrumb?.crumb}</a
 						>
 						{#if index !== breadCrumbsArr?.length - 1}

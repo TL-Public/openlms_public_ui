@@ -1,146 +1,166 @@
 <script>
-	// NOTES for integrating video player
-	// Before playing a video, an auth token and video id have to be generated and passed to the player
-	import { onMount, onDestroy, createEventDispatcher } from 'svelte';
+	import { onMount, onDestroy } from 'svelte';
 	import { browser } from '$app/environment';
-	import { error } from '@sveltejs/kit';
+	import { createEventDispatcher } from 'svelte';
+	import { format } from 'svelte-i18n';
+	import { user } from '/src/stores';
 
-	// videoID can be passed as a prop
-	export let videoId;
-	// token can also be passed as a  prop
-	export let token;
-	export let acceptToken = false;
-
-	const dispatch = createEventDispatcher();
+	let playerContainer;
+	let youtubePlayerInstance;
+	let playerFailed = false;
+	let currentVideoId;
 	let videoLoaded = false;
-	let player;
-	let mounted = false;
-	let scriptLoaded = false;
+	let dispatch = createEventDispatcher();
 
-	// inform when mounted
-	onMount(() => {
-		mounted = true;
-	});
+	export let videoId = '';
+	export let analyticsUrl = import.meta.env.VITE_ANALYTICS_URL;
+	export let videoMetaData = {};
+	export let startTimeInSeconds=null
+	export let autoplay = false
 
-	// remove any ongoing players when destroying
-	onDestroy(() => {
-		if (browser) {
-			try {
-				//to stop progress api calls when player is destroyed (when user navigates out of the page)
-				player?.blockViewProgressCalls();
-			} catch (error) {
-				console.log('error is', error);
-			}
-		}
-	});
+	let PlayerComponent;
 
-	// generate token for the video
-	async function generateToken() {
-		let payload = { email: 'sinu.jamal@tensorlogic.ai', displayName: 'Sinu Jamal' };
+	// Load YouTube Player script
+	async function loadYouTubePlayerComponent() {
+		if (window.Player) return window.Player;
 
-		//to stop progress api calls of current video when a new video is played.
-		if (player) player?.blockViewProgressCalls();
-		try {
-			const resp = await fetch('/apis/kpoint/token', {
-				method: 'POST',
-				body: JSON.stringify(payload),
-				headers: {
-					'Content-Type': 'application/json'
-				}
-			});
-			const { result } = await resp.json();
-			return result;
-		} catch (err) {
-			console.log('token-generation error', err);
-		}
-	}
-
-	function loadScript(src) {
-		return new Promise((resolve, reject) => {
-			const existingScript = document?.querySelector(`script[src="${src}"]`);
-
-			if (existingScript) {
-				resolve();
-				return;
-			}
-			const script = document?.createElement('script');
-			if (script) {
-				script.type = 'text/javascript';
-				script.src = src;
-				script.onload = () => {
-					resolve();
-				};
-				script.onerror = () => reject(new Error(`Failed to load script: ${src}`));
-				document.head.appendChild(script);
-			}
+		return new Promise((resolve) => {
+			const tag = document.createElement('script');
+			tag.src = '/youtube-player.iife.js';
+			tag.onload = () => resolve(window.Player);
+			tag.onerror = () => {
+				console.error('Failed to load YouTubePlayerComponent script.');
+				playerFailed = true;
+				resolve(null);
+			};
+			document.body.appendChild(tag);
 		});
 	}
 
-	$: createPlayer(videoId, mounted);
-	async function createPlayer() {
-		if (browser && mounted) {
-			dispatch('playerLoaded', false);
-			videoLoaded = false;
-			if (!videoId) return;
-			await loadScript('//assets.kpoint.com/orca/media/embed/player-silk.js');
-			scriptLoaded = true;
-			if (!acceptToken) {
-				token = await generateToken();
-			}
+	// Create Player
+	async function createPlayer(id) {
+		if (!browser || !PlayerComponent || !playerContainer) return;
 
-			try {
-				const interval = setInterval(() => {
-					if (typeof kPoint != 'undefined') {
-						clearInterval(interval);
-						loadPlayer();
-					}
-				}, 150);
-			} catch (err) {
-				console.log('error is', err);
-			} finally {
-				dispatch('playerLoaded', true);
-				videoLoaded = true;
-			}
+		// Destroy old player if any
+		if (youtubePlayerInstance?.$destroy) {
+			youtubePlayerInstance.$destroy();
+			youtubePlayerInstance = null;
 		}
-	}
 
-	function loadPlayer() {
+		playerFailed = false;
+		videoLoaded = false;
+
 		try {
-			const outerContainer = document.getElementById('player-outer-container');
-			if (outerContainer) {
-				const targetDiv = outerContainer.querySelector('#player-container');
-				if (targetDiv) {
-					targetDiv.remove();
+			
+			const combinedVideoMetaData = {
+				videoUuid: null,
+				userUuid: $user && $user?.userUuid ? $user?.userUuid : 'public',
+				courseUuid: null,
+				chapterUuid: null,
+				...videoMetaData // set some default values and overwrite with props given by consumer
+			};
+
+			youtubePlayerInstance = new PlayerComponent({
+				target: playerContainer,
+				props: {
+					videoId: id,
+					autoplay: autoplay,
+					analyticsUrl,
+					bufferingDelayThreshold: 1.5,
+					videoUuid: combinedVideoMetaData.videoUuid,
+					startTimeInSeconds: startTimeInSeconds,
+					additionalInfo: {
+						courseId: combinedVideoMetaData.courseUuid ? combinedVideoMetaData.courseUuid : null,
+						userId: combinedVideoMetaData.userUuid,
+						chapterId: combinedVideoMetaData.chapterUuid ? combinedVideoMetaData.chapterUuid : null
+					}
 				}
-				const newDiv = document.createElement('div');
-				newDiv.setAttribute('id', 'player-container');
-				outerContainer.prepend(newDiv);
-			}
-			// throw error(404, "no found")
-			player = kPoint.Player(document.getElementById('player-container'), {
-				kvideoId: videoId,
-				videoHost: 'test-nabard.kpoint.com',
-				params: { xt: token }
 			});
+
+			// Attach listeners
+			youtubePlayerInstance.$on('ready', (e) => {
+				console.log('YouTube player ready');
+				dispatch('ready', true);
+			});
+
+			youtubePlayerInstance.$on('statechange', (e) => {
+				// console.log('Player state:', e.detail.state);
+				dispatch('statechange', e.detail);
+			});
+
+			youtubePlayerInstance.$on('error', (e) => {
+				console.error('Player error:', e.detail);
+				playerFailed = true;
+				dispatch('error', e.detail);
+			});
+
+			youtubePlayerInstance.$on('like', (e) => {
+				dispatch('like', e.detail);
+			});
+
+			youtubePlayerInstance.$on('metadata', (e) => {
+				dispatch('metadata', e.detail);
+			});
+
+			videoLoaded = true;
 		} catch (err) {
-			console.log('error is', err);
+			console.error('Failed to create player', err);
+			playerFailed = true;
+		} finally {
+			videoLoaded = !playerFailed;
 		}
 	}
+
+	// Load component and create player on mount
+	onMount(async () => {
+		if (!browser) return;
+
+		PlayerComponent = await loadYouTubePlayerComponent();
+		if (videoId === null || videoId === '' || videoId === undefined) {
+			playerFailed = true;
+			videoLoaded = false;
+			return;
+		}
+	});
+
+	// Watch for videoId changes and recreate player
+	$: if (
+		PlayerComponent &&
+		browser &&
+		videoId !== currentVideoId &&
+		videoId !== null &&
+		videoId !== '' &&
+		videoId !== undefined
+	) {
+		currentVideoId = videoId;
+		createPlayer(videoId);
+	}
+
+	onDestroy(() => {
+		if (youtubePlayerInstance?.$destroy) {
+			youtubePlayerInstance.$destroy();
+			youtubePlayerInstance = null;
+		}
+		videoLoaded = false;
+		playerFailed = false;
+	});
 </script>
 
-<div
-	id="player-outer-container"
-	class="relative"
-	style="width:100%; aspect-ratio: 16/9.5;shadow-sm"
->
+<div class="relative" style="width:100%; aspect-ratio: 16/9.5;">
 	{#if !videoLoaded}
 		<div class="absolute top-0 left-0 w-full bg-gray-50 animate-pulse z-40 h-[95%]"></div>
 		<div
-			class="w-20 h-20 border-8 border-gray-30 border-t-orange-100 z-50 absolute top-1/2 left-1/2 rounded-full -translate-x-1/2 -translate-y-1/2 round-loader origin-[0%_0%]"
+			class="w-20 h-20 border-8 border-gray-30 border-t-accent z-50 absolute top-1/2 left-1/2 rounded-full -translate-x-1/2 -translate-y-1/2 round-loader origin-[0%_0%]"
 		></div>
+	{:else if playerFailed}
+		<div
+			class="absolute top-0 left-0 w-full bg-gray-50 z-40 h-[95%] flex items-center justify-center text-primary font-medium"
+		>
+			{$format('Sorry! Failed to load video')}
+		</div>
 	{/if}
 
-	<div id="player-container" style="width:100%; "></div>
+	<div bind:this={playerContainer} style="width:100%; "></div>
 </div>
 
 <style>

@@ -7,15 +7,15 @@
 </script>
 
 <div class="mb-6">
-	<ErrorComponent errorMessage={$format('NoDataFound')} />
+	<!-- <ErrorComponent errorMessage={$format('NoDataFound')} /> -->
 
-	<!-- <div class="">
+	<div class="">
 		<Top10CoursesCardAssesment />
-	</div> -->
+	</div>
 </div>
 
 <div class="">
-	<!-- <div class="">
+	<div class="">
 		<Top10VideosCardAssesment />
-	</div> -->
+	</div>
 </div>

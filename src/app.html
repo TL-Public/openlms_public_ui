@@ -6,28 +6,13 @@
 			type="text/javascript"
 			src="//assets.kpoint.com/orca/media/embed/player-silk.js"
 		></script> -->
-		<!-- <script
-			fetchpriority="high"
-			type="text/javascript"
-			src="//assets.kpohttps://www.youtube.com/iframe_api"
-		></script> -->
 		<!-- Google Material Icon -->
 		<link
 			href="https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Two+Tone|Material+Icons+Round|Material+Icons+Sharp"
 			rel="stylesheet"
 		/>
-		<link rel="preconnect" href="https://fonts.googleapis.com" />
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-		<link
-			href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap"
-			rel="stylesheet"
-		/>
-		<link
-			href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap"
-			rel="stylesheet"
-		/>
 		<meta charset="utf-8" />
-		<link rel="icon" href="%sveltekit.assets%/favicon-16x16.png" />
+		<link rel="icon" href="%sveltekit.assets%/favicon.svg" />
 		<!-- google icons -->
 		<link
 			href="https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Two+Tone|Material+Icons+Round|Material+Icons+Sharp"
@@ -37,7 +22,10 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		%sveltekit.head%
 	</head>
+
 	<body>
 		<div style="display: contents">%sveltekit.body%</div>
+		<!-- Portal target -->
+		<div id="modal-root"></div>
 	</body>
 </html>

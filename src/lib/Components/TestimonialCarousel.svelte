@@ -33,7 +33,7 @@
 					{#each quotes as _, i}
 						<button
 							class="w-2 h-2 mx-1 rounded-full {i === currentIndex
-								? 'bg-secondary'
+								? 'bg-accent'
 								: 'bg-gray-300'}"
 							on:click={() => setQuote(i)}
 						></button>

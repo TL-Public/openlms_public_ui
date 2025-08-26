@@ -39,6 +39,7 @@
 			// TODO handle form result validation and then navigate
 		};
 	}
+
 	function toggleVisibility() {
 		showPassword = !showPassword;
 	}
@@ -48,7 +49,7 @@
 	<div class="fixed inset-0 bg-white" aria-hidden="true">
 		<div class="w-full flex h-full">
 			<!-- Left side text and decoration -->
-			<div class="sm:w-1/2 lg:flex flex-col bg-white80 relative hidden">
+			<div class="sm:w-1/2 lg:flex flex-col bg-ivory relative hidden">
 				<div class="sm:px-36 flex flex-col flex-1 justify-center">
 					<h2 class="text-4xl font-extrabold text-primary mb-4 relative">
 						<img
@@ -91,27 +92,27 @@
 
 					<div class="mb-6">
 						<InputField
-						label={$format('UniquePin')}
-						placeholder={$format('EnterUniquePin')}
-						type={showPassword ? 'text' : 'password'}
-						bind:value={formObject.uniqueId}
-						name="password"
-						required
-						autocomplete="password"
+					label={$format('UniquePin')}
+					placeholder={$format('EnterUniquePin')}
+					type={showPassword ? 'text' : 'password'}
+					bind:value={formObject.uniqueId}
+					name="password"
+					required
+					autocomplete="password"
+				>
+					<!-- Icon Slot -->
+					<button
+						type="button"
+						class="flex items-center justify-center text-gray-500 hover:text-gray-700 focus:outline-none"
+						on:click={toggleVisibility}
 					>
-						<!-- Icon Slot -->
-						<button
-							type="button"
-							class="flex items-center justify-center text-gray-500 hover:text-gray-700 focus:outline-none"
-							on:click={toggleVisibility}
-						>
-							{#if showPassword}
-								<span class="material-icons text-lg">visibility</span>
-							{:else}
-								<span class="material-icons text-lg">visibility_off</span>
-							{/if}
-						</button>
-					</InputField>
+						{#if showPassword}
+							<span class="material-icons text-lg">visibility</span>
+						{:else}
+							<span class="material-icons text-lg">visibility_off</span>
+						{/if}
+					</button>
+				</InputField>
 					</div>
 					<div class="mb-2">
 						<Filter

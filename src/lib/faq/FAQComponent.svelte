@@ -21,7 +21,7 @@
 
 	let DummyDataFaq = new Array(5);
 	let FAQData = FAQ;
-	let bgColor = 'bg-secondary';
+	let bgColor = 'bg-white';
 	let error = null;
 	let expandedItem = null;
 	// set default to 0th category
@@ -54,10 +54,12 @@
 	}
 </script>
 
-<div class="hidden lg:block pb-20">
+<div class="hidden lg:block">
 	<div class=" flex min-h-screen items-start gap-2 lg:mx-[92px]">
 		{#if !faqError && !categoryError}
-			<div class="w-1/5 border-r-2 border-r-gray-10 px-4 2xl:px-2 py-4 bg-blue-10 rounded-lg">
+			<div
+				class="w-1/5 border-r-2 border-r-gray-10 px-4 2xl:px-2 py-4 bg-blue-10 rounded-lg sticky top-16"
+			>
 				<!-- category prop is used to set the default to 0th category -->
 				<Sidebar
 					{bgColor}
@@ -86,7 +88,7 @@
 							{/each}
 						</div>
 					{:else}
-						<ErrorComponent />
+						<ErrorComponent  errorMessage={$_('NoDataFound')}/>
 					{/if}
 				</div>
 			</div>
@@ -94,7 +96,7 @@
 	</div>
 </div>
 
-<div class="block lg:hidden pb-20">
+<div class="block lg:hidden">
 	<div class=" bg-blue-10 px-4 pt-4 pb-8 rounded-lg tranform -translate-y-[65.5px] mx-4 mb-4 mt-16">
 		<div class="px-0 pb-4 pt-0">
 			<BreadCrumbs {route} />
@@ -102,11 +104,12 @@
 		<h2 class="text-base sm:text-2xl font-bold text-primary">{$_('FrequentlyAskedQuestions')}</h2>
 	</div>
 
-	<div class="tranform -translate-y-[65.5px] mx-4 mb-8 bg-blue-10 py-8 px-4">
-		{#if !faqError}
+	<div class="tranform -translate-y-[65.5px] mx-4 mb-8">
+		{#if !faqError && !categoryError}
 			{#each faqSideBarList as sideBarItem, index (index)}
 				<SingleAccordionElementMobileView
 					{sideBarItem}
+					border={'border-none'}
 					fontWeight={'font-medium'}
 					expanded={expandedItem === sideBarItem?.id}
 					on:handleAccordionClick={handleAccordionClick}
@@ -121,12 +124,12 @@
 					</div>
 				</SingleAccordionElementMobileView>
 			{:else}
-				{#each DummyDataFaq as faq}
+			{#each DummyDataFaq as faq}
 					<SingleAccordionElementSkeleton border={true} />
 				{/each}
 			{/each}
 		{:else}
-			<ErrorComponent />
+			<ErrorComponent errorMessage={$_('NoDataFound')} />
 		{/if}
 	</div>
 </div>

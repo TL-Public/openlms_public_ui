@@ -3,6 +3,8 @@ import { error } from '@sveltejs/kit';
 export async function load({ params, fetch, parent }) {
 	const parentData = await parent();
 
+	let pageTitle=''
+
 	const fetchCenterDetails = async () => {
 		let res;
 		try {
@@ -17,6 +19,7 @@ export async function load({ params, fetch, parent }) {
 				// no catch block as this should go to error page
 				throw error(404, { message: 'Center Not found', status: 404 });
 			}
+			pageTitle = 'Training Center Details - ' + centerDataJson.name  ;
 			return centerDataJson;
 		} catch (err) {
 			throw error(500, { message: err.message, status: 500 });
@@ -65,21 +68,21 @@ export async function load({ params, fetch, parent }) {
 					courseData.startDate = new Date(element.startYear, element.startMonth - 1);
 					return { ...courseData, startMonth: element.startMonth, startYear: element.startYear };
 				})
-				.sort((courseA, courseB) => {
-					//rseti courses are sorted in descending order before displaying
+				// .sort((courseA, courseB) => {
+				// 	//rseti courses are sorted in descending order before displaying
 
-					// Ensure dates are valid before comparison
-					const dateA = new Date(courseA.startDate);
-					const dateB = new Date(courseB.startDate);
+				// 	// Ensure dates are valid before comparison
+				// 	const dateA = new Date(courseA.startDate);
+				// 	const dateB = new Date(courseB.startDate);
 
-					if (isNaN(dateA.getTime()) || isNaN(dateB.getTime())) {
-						console.warn('Invalid date encountered during sorting. Skipping comparison.');
-						return 0; // Maintain original order in case of invalid dates
-					}
+				// 	if (isNaN(dateA.getTime()) || isNaN(dateB.getTime())) {
+				// 		console.warn('Invalid date encountered during sorting. Skipping comparison.');
+				// 		return 0; // Maintain original order in case of invalid dates
+				// 	}
 
-					// Sort in descending order based on timestamps
-					return dateB.getTime() - dateA.getTime();
-				});
+				// 	// Sort in descending order based on timestamps
+				// 	return dateB.getTime() - dateA.getTime();
+				// });
 
 			return centerCoursesData;
 		} catch (error) {
@@ -89,6 +92,7 @@ export async function load({ params, fetch, parent }) {
 	return {
 		centerData: await fetchCenterDetails(),
 		centerCoursesData: await fetchCoursesForCenter(),
-		rsetiStats: await fetchRsetiStats()
+		rsetiStats: await fetchRsetiStats(),
+		pageTitle: pageTitle || 'RSETI Details'
 	};
 }

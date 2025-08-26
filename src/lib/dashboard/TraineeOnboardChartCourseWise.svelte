@@ -10,6 +10,7 @@
 	export let courseList = []; // Course list
 	export let lang = 'en';
 
+	const yearOfAssessment= 2023 // hardcoded for now, can be made dynamic later
 	let selectedCourse = 'All'; // Default selection
 	let labels = [];
 	let data = [];
@@ -94,9 +95,9 @@
 
 	let error = null;
 	$: if (traineesByCourse?.status !== 200) {
-		error = traineesByCourse.error || 'Failed to fetch data';
+		error = traineesByCourse.error || $format('NoDataFound');
 	} else if (traineesByCourse?.data?.length === 0) {
-		error = 'No data found';
+		error = $format('NoDataFound');
 	} else {
 		error = null;
 	}
@@ -116,10 +117,11 @@
 				: traineesByCourse?.data?.filter((item) => item?.course_code === courseCode);
 
 		if (filteredData?.length === 0) {
-			error = 'No data found for the selected course';
+			error = $format('NoDataFoundForSelectedCourse');
 		}
 		// Prepare chart data
 		const transformed = {};
+
 		filteredData?.forEach(({ mnth, total_trainees }) => {
 			const monthName = monthNames[mnth - 1];
 			if (!transformed[monthName]) {
@@ -159,10 +161,10 @@
 	];
 </script>
 
-<div class="bg-white80 w-full flex flex-col py-4 md:py-8 px-4 md:px-16 rounded-lg">
+<div class="bg-white w-full flex flex-col py-4 md:py-8 px-4 md:px-16 rounded-lg">
 	<div class="flex flex-col md:flex-row justify-between gap-2 md:gap-0">
 		<div>
-			<h3 class="text-base font-bold text-primary">{$format('TraineesOnboardTrendCourseLevel')}</h3>
+			<h3 class="text-base font-bold text-primary">{$format('TraineesOnboardTrendCourseLevel')} ({yearOfAssessment})</h3>
 		</div>
 		<div class="flex gap-4 items-start md:items-center w-40 md:w-48">
 			<Filter

@@ -18,15 +18,43 @@
 	export let loadingInVideos;
 	export let selectedLang;
 	export let courseUuid = '';
+	export let courseCode = '';
+	export let courseDetails = {};
 	export let showAvailableLanguages = true;
 	export let showLanguageSelectionButtons = true;
 	export let videoUuid = '';
+	export let traineeDetailsData = {}
 
-	let languageCodeList = {
+	// export const languageCodeList = {
+	// en: { name: 'English', orderNumber: 1 },
+	// hi: { name: 'हिंदी', orderNumber: 2 },
+	// ta: { name: 'தமிழ்', orderNumber: 3 },
+	// ml: { name: 'മലയാളം', orderNumber: 4 },
+	// bn: { name: 'বাংলা', orderNumber: 5 },
+	// mr: { name: 'मराठी', orderNumber: 6 },
+	// te: { name: 'తెలుగు', orderNumber: 7 },
+	// gu: { name: 'ગુજરાતી', orderNumber: 8 },
+	// kn: { name: 'ಕನ್ನಡ', orderNumber: 9 },
+	// or: { name: 'ଓଡ଼ିଆ', orderNumber: 10 },
+	// pa: { name: 'ਪੰਜਾਬੀ', orderNumber: 11 },
+	// as: { name: 'অসমীয়া', orderNumber: 12 }
+	// };
+
+	export const languageCodeList = {
 		en: { name: 'English', orderNumber: 1 },
-		hi: { name: 'हिंदी', orderNumber: 2 },
-		ta: { name: 'தமிழ்', orderNumber: 3 }
+		hi: { name: 'Hindi', orderNumber: 2 },
+		as: { name: 'Assamese', orderNumber: 3 },
+		bn: { name: 'Bengali', orderNumber: 4 },
+		gu: { name: 'Gujarati', orderNumber: 5 },
+		kn: { name: 'Kannada', orderNumber: 6 },
+		ml: { name: 'Malayalam', orderNumber: 7 },
+		mr: { name: 'Marathi', orderNumber: 8 },
+		or: { name: 'Odia', orderNumber: 9 },
+		pa: { name: 'Punjabi', orderNumber: 10 },
+		ta: { name: 'Tamil', orderNumber: 11 },
+		te: { name: 'Telugu', orderNumber: 12 }
 	};
+
 	let languageAvailableForVideos = [];
 	let chapterAccordianOpen = [];
 	let errorInSearch = null;
@@ -82,6 +110,27 @@
 		languageAvailableForVideos = languageAvailableForVideos.sort(
 			(a, b) => a.orderNumber - b.orderNumber
 		);
+
+		const preferredLanguage = traineeDetailsData.videoPreferredLanguage;
+		const availableLanguages = [...uniqueLanguageCodes];
+
+		if ($page?.data?.user?.isAuthenticated) {
+			if (preferredLanguage && availableLanguages.includes(preferredLanguage)) {
+				selectedLanguage = preferredLanguage;
+			} else if (availableLanguages.includes('en')) {
+				selectedLanguage = 'en';
+			} else if (availableLanguages.includes('hi')) {
+				selectedLanguage = 'hi';
+			} else {
+				// fallback to first available language in the videos array
+				selectedLanguage = languageAvailableForVideos[0]?.languageCode || null;
+			}
+		} else {
+			// User not logged in
+			selectedLanguage = availableLanguages.includes('en')
+				? 'en'
+				: languageAvailableForVideos[0]?.languageCode || null;
+		}
 	}
 
 	function handleSearchValue(e) {
@@ -156,6 +205,7 @@
 				{selectedLanguage}
 				{params}
 				{courseUuid}
+				{courseDetails}
 				{videoUuid}
 				{showLanguageSelectionButtons}
 				on:handleSelectedLanguage={handleSelectedLanguage}
@@ -168,7 +218,14 @@
 	<div class="grid grid-cols-1 lg:grid-cols-2 gap-4 p-4">
 		{#each videosSearch as video, index (index)}
 			<div class="" class:bg-primary={video?.uuid === videoUuid}>
-				<VideoPod {video} {params} selectedLanguage={video.languageCode} {courseUuid} />
+				<VideoPod
+					{video}
+					{params}
+					selectedLanguage={video.languageCode}
+					{courseUuid}
+					{courseDetails}
+					showProgressIcons={$page?.data?.user?.isAuthenticated ? true : false}
+				/>
 			</div>
 		{/each}
 	</div>

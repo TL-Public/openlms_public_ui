@@ -4,10 +4,12 @@
 	import ErrorComponent from '$lib/Components/ErrorComponent.svelte';
 	import { format } from 'svelte-i18n';
 	import Filter from '$lib/Components/Filter.svelte';
+
 	export let statesData = []; // State list
 	export let lang = 'en';
 	export let stateWiseTraineeOnboard = [];
 	export let traineeOnBoardTotal = [];
+
 	let selectedState = -1; // Default selection
 	let labels = [];
 	let data = [];
@@ -27,6 +29,7 @@
 			}
 		]
 	};
+
 	let chartOptions = {
 		responsive: true,
 		maintainAspectRatio: false,
@@ -88,6 +91,7 @@
 			}
 		}
 	};
+
 	let error = null;
 	// $: if (stateWiseTraineeOnboard?.status !== 200) {
 	// 	error = stateWiseTraineeOnboard.error || 'Failed to fetch data';
@@ -96,10 +100,12 @@
 	// } else {
 	// 	error = null;
 	// }
+
 	function updateChart(stateId) {
 		selectedState = Number(stateId);
 		// Clear previous error
 		error = null;
+
 		// if (!stateWiseTraineeOnboard || stateWiseTraineeOnboard?.length === 0) {
 		// 	error = 'No data found';
 		// 	return;
@@ -109,25 +115,31 @@
 			stateId === Number(-1)
 				? traineeOnBoardTotal
 				: stateWiseTraineeOnboard?.filter((item) => item.id == parseInt(stateId));
+
 		filteredData = filteredData?.sort((a, b) => a.year - b.year);
+
 		if (!filteredData || filteredData.length === 0) {
 			error =
 				stateId === -1
-					? 'No data found' // No data for all states
-					: 'No data found for the selected state'; // No data for a specific state
+					?  $format('NoDataFound') // No data for all states
+					:  $format('NoDataFoundForSelectedState'); // No data for a specific state
 			return;
 		}
+
 		// Transform data
 		const allYears = {};
 		const traineesCnt = [];
+
 		filteredData.forEach(({ year, trainedCount }) => {
 			if (!allYears[year]) {
 				allYears[year] = year;
 			}
 			traineesCnt.push(trainedCount);
 		});
+
 		labels = Object.keys(allYears); // Month names
 		data = traineesCnt; // Trainee counts
+
 		// Update chart data
 		chartData = {
 			labels,
@@ -142,8 +154,10 @@
 			]
 		};
 	}
+
 	updateChart(-1);
 	// Generate course options
+
 	let stateOptions = statesData
 		.map((states) => ({
 			id: states.extId,
@@ -155,6 +169,7 @@
 			return a.name.localeCompare(b.name); // Sort the rest alphabetically
 		});
 </script>
+
 <div class="bg-white w-full flex flex-col py-4 md:py-8 px-4 md:px-16 rounded-lg">
 	<div class="flex flex-col md:flex-row justify-between gap-2 md:gap-0">
 		<div>

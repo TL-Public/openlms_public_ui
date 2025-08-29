@@ -1,7 +1,5 @@
 <script>
-	export let iconName = '';
-	export let addClass = '';
-	export let styleType = 'outlined';
+export let iconName = ""
+export let addClass = ""
 </script>
-
-<span class="material-icons-{styleType} text-center {addClass}">{iconName}</span>
+<span class="material-icons-outlined text-center  {addClass}">{iconName}</span>

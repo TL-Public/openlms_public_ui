@@ -8,24 +8,70 @@
 	import BreadCrumbs from '$lib/breadCrumbs/BreadCrumbs.svelte';
 	import GeneralStats from '$lib/landingPage/GeneralStats.svelte';
 	import { _ } from 'svelte-i18n';
-	import YoutubePlayer from '$lib/Components/YoutubePlayer.svelte';
+	import VideoPlayer from '$lib/Components/VideoPlayer.svelte';
 	import { page } from '$app/stores';
 	import { categoryList as courseCategoryList } from '$lib/data.js';
-	import { extractYouTubeVideoId } from '$lib/utils/helper.js';
-
+	import { extractYouTubeVideoId } from '$lib/data.js';
+	import { languageMap, languageOrder } from '/src/config/constants.js';
+	import { user } from '/src/stores';
 	export let params;
 	export let route;
 	export let courseDetails = {};
 	export let courseStats = {};
+	export let introVideos = [];
 	const lang = $page.data?.lang ? $page.data.lang : 'en';
 	const courseCategory = courseDetails.category;
 	const languageWiseCategories = courseCategoryList[lang];
-
-	$: setTotalVideoDuration(courseStats);
-
+	let languageAvailableForIntroVideos = [];
+	let selectedLanguage = null;
 	let error = null;
 	let courseStatsDetails = [];
 	let loading = false;
+
+	let isDescriptionExpanded = false;
+	let showToggle = false;
+	let descriptionElement;
+
+	$: setTotalVideoDuration(courseStats);
+
+	$: if (introVideos?.length > 0) {
+		setAvailableLanguages();
+	}
+
+	function toggleDescription() {
+		isDescriptionExpanded = !isDescriptionExpanded;
+	}
+
+	async function setAvailableLanguages() {
+		if (introVideos?.error || introVideos?.length === 0) {
+			languageAvailableForIntroVideos = [];
+			selectedLanguage = null;
+			return;
+		}
+
+		languageAvailableForIntroVideos = introVideos
+			?.map((video) => {
+				if (video?.languageCode)
+					return {
+						code: video?.languageCode,
+						name: languageMap[video?.languageCode] || video?.languageCode,
+						url: video?.videoUrl,
+						extId: video?.videoExtId
+					};
+			})
+			.filter(Boolean)
+			.sort((a, b) => {
+				const indexA = languageOrder.indexOf(a.code);
+				const indexB = languageOrder.indexOf(b.code);
+
+				// If a code is not in the order list, place it at the end
+				return (indexA === -1 ? Infinity : indexA) - (indexB === -1 ? Infinity : indexB);
+			});
+
+		const englishVideo = languageAvailableForIntroVideos?.find((v) => v.code === 'en');
+		const hindiVideo = languageAvailableForIntroVideos?.find((v) => v.code === 'hi');
+		selectedLanguage = englishVideo || hindiVideo || languageAvailableForIntroVideos[0] || null;
+	}
 
 	function setTotalVideoDuration() {
 		// if (Object.keys(courseStats)?.length === 0) return;
@@ -42,19 +88,32 @@
 			},
 			{
 				statName: 'CourseDuration',
-				statValue: courseStats?.courseDuration? courseStats?.courseDuration + ' ' + $_('Days') : null,
+				statValue: courseStats?.courseDuration
+					? courseStats?.courseDuration + ' ' + $_('Days')
+					: null,
 				iconSvg: '/courseDurationIcon.svg'
 			},
 			{
 				statName: 'Students',
-				statValue: courseStats?.numberOfStudents,
+				statValue: courseStats?.numberOfStudents || 'N/A',
 				iconSvg: '/studentsIcon.svg'
 			}
 		];
 	}
 
+	function handleSelectedLanguage(language) {
+		selectedLanguage = language;
+	}
+
 	onMount(async () => {
 		setLocalStoreData('courseTitle', courseDetails?.title);
+		if (descriptionElement) {
+			// Check if the content is overflowing
+			// clientHeight is the visible height, scrollHeight is the total height
+			if (descriptionElement.scrollHeight > descriptionElement.clientHeight) {
+				showToggle = true;
+			}
+		}
 	});
 </script>
 
@@ -62,9 +121,9 @@
 	<AboutCourseSkeletonComponent />
 {/if}
 
-{#if !loading && error === null}
+{#if Object?.keys(courseDetails)?.length > 0}
 	<div
-		class=" bg-blue-10 px-8 pt-4 pb-8 mb-8 mt-0 lg:mb-9 lg:mt-0 lg:px-[92px] lg:pb-9 lg:pt-6 lg:min-h-40"
+		class="  px-4 pt-4 pb-4 sm:px-9 sm:py-12 sm:pt-6 mb-8 rounded-lg text-darkGray bg-blue-20 lg:min-h-40"
 	>
 		<div class="pb-6 lg:pb-6">
 			<BreadCrumbs {route} {params} />
@@ -77,8 +136,10 @@
 				class={`flex flex-col justify-between gap-0 w-full md:w-full sm:gap-4 md:gap-4 ${courseDetails.aboutVideoExtid ? 'lg:w-2/3' : ''}`}
 			>
 				<div>
-					<div class="text-primary">
-						<h2 class="uppercase-headers capitalize">
+					<div>
+						<h2
+							class="text-base sm:text-2xl text-primary font-bold leading-normal sm:leading-2 pb-4 lg:pb-3 capitalize"
+						>
 							{courseDetails?.title ?? ''}
 						</h2>
 						<p class="text-sm font-semibold pb-0.5 capitalize">
@@ -96,20 +157,53 @@
 							</span>
 						</p>
 					</div>
+					{#if courseDetails?.description}
+						<div>
+							<p
+								bind:this={descriptionElement}
+								class="text-xs sm:text-sm text-darkGray leading-6"
+								class:line-clamp-3={!isDescriptionExpanded}
+								title={courseDetails?.description ?? ''}
+							>
+								{courseDetails?.description ?? ''}
+							</p>
+							{#if showToggle}
+								<button on:click={toggleDescription} class="text-xs sm:text-sm text-blue-600 hover:text-blue-800 underline">
+									{#if isDescriptionExpanded}
+										{$_('show less')}
+									{:else}
+										{$_('show more')}
+									{/if}
+								</button>
+							{/if}
+						</div>
+					{/if}
+				</div>
+				{#if languageAvailableForIntroVideos?.length > 0}
 					<div>
-						<p
-							class="text-xs sm:text-sm text-darkGray mb-4 line-clamp-3 leading-6"
-							title={courseDetails?.description ?? ''}
-						>
-							{courseDetails?.description ?? ''}
+						<p class="text-xs sm:text-sm mb-2">
+							{$_('Available Languages for Introductory video')}:
 						</p>
+						<div class="flex gap-1 mb-4 flex-wrap items-center">
+							{#each languageAvailableForIntroVideos as language}
+								<button
+									class="px-1 py-1 border rounded text-xs min-w-[90px]"
+									on:click={() => handleSelectedLanguage(language)}
+									class:bg-primary={selectedLanguage?.code === language?.code}
+									class:text-white={selectedLanguage?.code === language?.code}
+									class:bg-white={selectedLanguage?.code !== language?.code}
+								>
+									{language?.name}
+								</button>
+							{/each}
+						</div>
 					</div>
-				</div>
+				{/if}
 
-				<div class="hidden lg:block">
-					<CourseStats bgColor="white border border-gray-50" {courseStatsDetails} />
-				</div>
-				<div class="block lg:hidden">
+				<!-- <div class="hidden lg:block">
+					<CourseStats bgColor="white" {courseStatsDetails} />
+				</div> -->
+				<!-- <div class="block lg:hidden">
 					<GeneralStats
 						bgColor="white"
 						generalStats={courseStatsDetails}
@@ -118,21 +212,41 @@
 						{loading}
 						{error}
 					/>
-				</div>
+				</div> -->
 			</div>
-			<div class=" mb-4 lg:mb-0 lg:w-3/5 md:justify-self-center flex items-end">
-				{#if courseDetails.aboutVideoExtid}
-					<YoutubePlayer
-						videoId={courseDetails.aboutVideoUrl
-							? extractYouTubeVideoId(courseDetails.aboutVideoUrl)
-							: 'null'}
+			<div class=" mb-4 lg:mb-0 lg:w-3/5 md:justify-self-center flex items-start">
+				<!-- {#if courseDetails.aboutVideoExtid}
+					<VideoPlayer
+						videoId={courseDetails.aboutVideoExtid ? courseDetails.aboutVideoExtid : 'null'}
+						courseCode={courseDetails.courseCode ? courseDetails.courseCode : ''}
+					/> -->
+
+				{#if selectedLanguage}
+					<VideoPlayer videoId={extractYouTubeVideoId(selectedLanguage.url)} />
+				{:else}
+					<img
+						src={courseDetails.imageUrl}
+						alt="course thumbnail"
+						class="rounded-lg aspect-square sm:max-w-[280px] lg:mx-auto lg:mb-4"
 					/>
-					{:else}
-					<img src={courseDetails.imageUrl} alt="course thumbnail" class="rounded-lg grayscale" />
 				{/if}
 			</div>
 		</div>
+		<div class="">
+			<CourseStats
+				bgColor="white"
+				generalStats={courseStatsDetails}
+				column={'single'}
+				alignment={'center'}
+				{loading}
+				{error}
+			/>
+		</div>
 	</div>
-{:else if error != null}
-	<ErrorMessage {error} />
+{:else}
+	<div
+		class="  px-4 pt-4 pb-4 sm:px-9 sm:py-12 sm:pt-6 mb-8 rounded-lg text-darkGray bg-blue-20 lg:min-h-40"
+	>
+		<ErrorMessage error={$_('Failed to load course details')} />
+	</div>
 {/if}

@@ -2,6 +2,7 @@ export const ssr = false;
 
 export async function load({ fetch, parent }) {
 	const parentData = await parent();
+	let unauthorized = parentData?.unauthorized ?? false;
 
 	const lang = parentData?.lang ? parentData.lang : 'en';
 	const stateList = parentData.stateData ? parentData.stateData : [];
@@ -18,7 +19,11 @@ export async function load({ fetch, parent }) {
 		try {
 			// get overall data of states from api
 			const statsResp = await fetch(`/apis/overallStats/trainees/by-state`);
+			
 			if (!statsResp.ok) {
+			if(statsResp.status== 401){
+				unauthorized=true;
+			}
 				return [];
 			}
 
@@ -63,6 +68,9 @@ export async function load({ fetch, parent }) {
 		try {
 			res = await fetch(`/apis/overallStats/trainees/by-category`);
 			if (!res.ok) {
+				if (res.status == 401) {
+					unauthorized = true;
+				}
 				throw new Error('Failed to fetch data');
 			}
 			if (res.status !== 200) {
@@ -83,6 +91,9 @@ export async function load({ fetch, parent }) {
 		try {
 			res = await fetch(`/apis/overallStats/trainees/by-course`);
 			if (!res.ok) {
+				if (res.status == 401) {
+					unauthorized = true;
+				}
 				throw new Error('Failed to fetch data');
 			}
 			if (res.status !== 200) {
@@ -106,6 +117,9 @@ export async function load({ fetch, parent }) {
 		try {
 			res = await fetch(`/apis/overallStats/trainees/by-state/currentYear`);
 			if (!res.ok) {
+				if (res.status == 401) {
+					unauthorized = true;
+				}
 				throw new Error('Failed to fetch data');
 			}
 			if (res.status !== 200) {
@@ -125,6 +139,9 @@ export async function load({ fetch, parent }) {
 		try {
 			res = await fetch(`/apis/overallStats/courses/by-state`);
 			if (!res.ok) {
+				if (res.status == 401) {
+					unauthorized = true;
+				}
 				throw new Error('Failed to fetch data');
 			}
 			if (res.status !== 200) {
@@ -155,6 +172,9 @@ export async function load({ fetch, parent }) {
 		try {
 			res = await fetch(`/apis/overallStats`);
 			if (!res.ok) {
+				if (res.status == 401) {
+					unauthorized = true;
+				}
 				throw new Error('Failed to fetch data');
 			}
 			if (res.status !== 200) {
@@ -174,6 +194,9 @@ export async function load({ fetch, parent }) {
 		try {
 			res = await fetch(`/apis/overallStats/grand-totals`);
 			if (!res.ok) {
+				if (res.status == 401) {
+					unauthorized = true;
+				}
 				throw new Error('Failed to fetch data');
 			}
 			if (res.status !== 200) {
@@ -193,6 +216,9 @@ export async function load({ fetch, parent }) {
 		try {
 			res = await fetch(`/apis/overallStats/rsetis`);
 			if (!res.ok) {
+				if (res.status == 401) {
+					unauthorized = true;
+				}
 				throw new Error('Failed to fetch data');
 			}
 			if (res.status !== 200) {
@@ -222,6 +248,7 @@ export async function load({ fetch, parent }) {
 		coursesByState: await fetchCoursesByState(),
 		courseList: parentData?.allCoursesData ? parentData.allCoursesData : [],
 		rsetiList: rsetiList,
-		lang
+		lang,
+		unauthorized
 	};
 }

@@ -1,15 +1,23 @@
 import { BASE_URL } from '$lib/config';
-
-export async function GET({ params, request }) {
+import { getHeaders } from '$lib/utils/helper';
+export async function GET({ params, request, cookies }) {
 	try {
 		let queryparams = request.url.split('?');
 		const { id } = params;
+		
 		let endPoint = `${BASE_URL}/apis/v1/videos/${id}`;
 		if (queryparams?.length > 1) {
 			endPoint += '?' + queryparams[1];
 		}
-		const res = await fetch(endPoint);
-
+		const authHeader = getHeaders(cookies);
+		const res = await fetch(endPoint, {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json',
+				...authHeader
+			}
+		});	
+		
 		if (!res.ok || res.status !== 200) {
 			return new Response(res.body, { status: res.status, headers: res.headers });
 		}
@@ -21,11 +29,13 @@ export async function GET({ params, request }) {
 		}
 
 		return new Response(JSON.stringify(data), {
-			headers: { 'Content-Type': 'application/json' }
+			headers: { 'Content-Type': 'application/json' },
+			status: 200
 		});
 	} catch (error) {
 		return new Response(JSON.stringify({error:error.message}), {
-			headers: { 'Content-Type': 'application/json' }
+			headers: { 'Content-Type': 'application/json' },
+			status: 500
 		});
 	}
 }

@@ -161,7 +161,7 @@
 								<td class="p-2">{label.name}</td>
 								<td class="text-right p-2">{label.viewCount}</td>
 								<td class="p-2 text-center">
-									<GoogleMatrialIcon iconName="visibility" addClass="text-orange-100" />
+									<GoogleMatrialIcon iconName="visibility" addClass="text-accent" />
 								</td>
 							</tr>
 						{/each}

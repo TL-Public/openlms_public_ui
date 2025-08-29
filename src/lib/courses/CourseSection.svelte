@@ -11,17 +11,20 @@
 	export let lang;
 	export let chapters = [];
 	export let courseUuid = '';
+	export let courseDetails = {};
+	export let traineeDetailsData = {}
+
 	let errorInVideos = null;
 	let searchValue = '';
 	let loadingInVideos = false;
 
 	let tabs = [
-		{ text: 'Chapters', component: Videos, clicked: false, textDispaly: $format('Chapters') },
+		{ text: 'Chapters', component: Videos, clicked: false, textDisplay: $format('Chapters') },
 		{
 			text: 'Training Centers',
 			component: LearningCenters,
 			clicked: false,
-			textDispaly: $format('TrainingCenters')
+			textDisplay: $format('TrainingCenters')
 		}
 	];
 
@@ -29,12 +32,12 @@
 
 	function setTabsData() {
 		tabs = [
-			{ text: 'Chapters', component: Videos, clicked: false, textDispaly: $format('Chapters') },
+			{ text: 'Chapters', component: Videos, clicked: false, textDisplay: $format('Chapters') },
 			{
 				text: 'Training Centers',
 				component: LearningCenters,
 				clicked: false,
-				textDispaly: $format('TrainingCenters')
+				textDisplay: $format('TrainingCenters')
 			}
 		];
 	}
@@ -67,4 +70,6 @@
 	{errorInVideos}
 	{loadingInVideos}
 	{courseUuid}
+	{courseDetails}
+	{traineeDetailsData}
 />

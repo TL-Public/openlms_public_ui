@@ -1,4 +1,3 @@
-import { error } from '@sveltejs/kit';
 import { String_Constants } from '/src/config/constants';
 import { browser } from '$app/environment';
 import '$lib/locals/i18n.js';
@@ -7,19 +6,21 @@ export async function load({ fetch, data }) {
 	const { session } = data;
 
 	const language = session?.language;
-	locale.set(language ? language : 'en');
+	let unauthorized = false;
 
 	await waitLocale();
 
 	if (browser) {
 		locale.set(language ? language : 'en');
 	}
-
 	const fetchCoursesDetails = async () => {
 		try {
 			const coursesData = await fetch(`/apis/courses`);
 
 			if (!coursesData.ok || coursesData.status !== 200) {
+				if (coursesData.status === 401) {
+					unauthorized = true;
+				}
 				return { allCoursesData: [], allCoursesMap: {} };
 			}
 
@@ -48,7 +49,7 @@ export async function load({ fetch, data }) {
 			return { allCoursesData: languageFilteredData, allCoursesMap: courseDataMap };
 		} catch (err) {
 			console.log(err);
-			return { allCoursesData: [], allCoursesMap: {}, error:err.message };
+			return { allCoursesData: [], allCoursesMap: {}, error: err.message };
 		}
 	};
 
@@ -58,6 +59,9 @@ export async function load({ fetch, data }) {
 			const resp = await fetch(`/apis/rseti`);
 
 			if (!resp.ok) {
+				if (resp.status === 401) {
+					unauthorized = true;
+				}
 				return [];
 			}
 			if (resp.status == 200) {
@@ -89,30 +93,39 @@ export async function load({ fetch, data }) {
 	};
 
 	const fetchStateList = async () => {
+		let allStates;
+		
 		try {
 			let statesMap = {};
+			
+			if (language === 'en') {
+				allStates = String_Constants.ALL_STATES;
+			}
+			if (language === 'hi') {
+				allStates = String_Constants.ALL_STATES_HI;
+			}
 
 			const res = await fetch(` /apis/states`);
+	
 			if (!res.ok || res.status !== 200) {
-				return [
-					{
-						title: String_Constants.NO_STATE_FOUND,
-						uuid: '0'
-					}
-				];
+				if (res.status === 401) {
+					unauthorized = true;
+				}
+				return {
+					stateData: [
+						{
+							name: allStates,
+							extId: '-1'
+						}
+					],
+					statesMap: {}
+				};
 			}
 			let statesDataJson = await res.json();
 
 			if (statesDataJson?.length > 0) {
 				// adding all states option to the list
 				statesDataJson = statesDataJson.filter((state) => state.languageCode === language);
-				let allStates
-				if(language==='en'){
-					 allStates="All States"
-				}
-				if(language==='hi'){
-					 allStates="सभी राज्य"
-				}
 
 				statesDataJson = [
 					{
@@ -130,7 +143,7 @@ export async function load({ fetch, data }) {
 				// return an option list with no state found
 				statesDataJson = [
 					{
-						name: String_Constants.NO_STATE_FOUND,
+						name: allStates,
 						extId: '-1'
 					}
 				];
@@ -142,7 +155,7 @@ export async function load({ fetch, data }) {
 			console.log('err', err.message);
 			return [
 				{
-					name: String_Constants.NO_STATE_FOUND,
+					name: allStates,
 					extId: '-1'
 				}
 			];
@@ -154,6 +167,8 @@ export async function load({ fetch, data }) {
 		...(await fetchCenters()),
 		...(await fetchStateList()),
 		lang: session?.language || 'en',
-		user: session.user
+		user: session.user,
+		unauthorized,
+		openLMS:true
 	};
 }

@@ -5,6 +5,9 @@
 	export let itemSelected = 'Default Option';
 	let selectState = false;
 	let dropDownRef;
+	let lastSelected = itemSelected;
+	let highlightedIndex = -1;
+	let inputRef;
 	const dispatch = createEventDispatcher();
 
 	// optionListConfigObject allows option list with custom key for option name
@@ -22,6 +25,12 @@
 
 	function toggleSelectState() {
 		selectState = !selectState;
+		if (selectState) {
+			highlightedIndex = filteredOptionList?.findIndex(
+				(option) => option[optionListConfigObject?.optionNameKey] === itemSelected
+			);
+			setTimeout(() => inputRef && inputRef?.focus(), 0);
+		}
 	}
 
 	onMount(() => {
@@ -40,18 +49,61 @@
 
 	// filters the options based on the value in the combo box
 	function handleComboBoxChange(event) {
+		selectState = true; // Keep the dropdown open while typing
 		filteredOptionList = optionList?.filter((element) => {
 			return element[optionListConfigObject?.optionNameKey]
 				?.toLowerCase()
 				.trim()
 				.includes(event.target.value.toLowerCase().trim());
 		});
+		highlightedIndex = 0;
 	}
 
 	function handleOptionSelect(option) {
 		itemSelected = option[optionListConfigObject?.optionNameKey];
+		lastSelected = itemSelected; 
 		selectState = false; // Close the dropdown
+		highlightedIndex = -1;
 		dispatch('filterItemSelected', option);
+	}
+
+	function handleInputKeydown(event) {
+		if (!selectState) return;
+		if (event.key === 'ArrowDown') {
+			event.preventDefault();
+			if (filteredOptionList.length === 0) return;
+			highlightedIndex = (highlightedIndex + 1) % filteredOptionList.length;
+		} else if (event.key === 'ArrowUp') {
+			event.preventDefault();
+			if (filteredOptionList.length === 0) return;
+			highlightedIndex =
+				(highlightedIndex - 1 + filteredOptionList.length) % filteredOptionList.length;
+		} else if (event.key === 'Enter') {
+			event.preventDefault();
+			if (highlightedIndex >= 0 && highlightedIndex < filteredOptionList.length) {
+				handleOptionSelect(filteredOptionList[highlightedIndex]);
+			}
+		} else if (event.key === 'Escape') {
+			resetInputToLastSelected();
+			selectState = false;
+			highlightedIndex = -1;
+		}
+	}
+
+	function handleInputBlur(event) {
+		if (selectState) {
+			setTimeout(() => {
+				if (!document.activeElement || !dropDownRef.contains(document.activeElement)) {
+					resetInputToLastSelected();
+					selectState = false;
+					highlightedIndex = -1;
+				}
+			}, 100);
+		}
+	}
+
+	function resetInputToLastSelected() {
+		itemSelected = lastSelected;
 	}
 </script>
 
@@ -62,7 +114,10 @@
 				on:input={handleComboBoxChange}
 				bind:value={itemSelected}
 				on:click={toggleSelectState}
-				class="relative w-full cursor-default rounded-md bg-blue-10 border py-2.5 sm:py-1.5 pl-3 pr-10 text-left font-semibold text-primary shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-600 text-xs sm:leading-6"
+				bind:this={inputRef}
+				on:keydown={handleInputKeydown}
+				on:blur={handleInputBlur}
+				class="relative w-full cursor-default rounded-md bg-blue-20 py-2.5 sm:py-1.5 pl-3 pr-10 text-left font-semibold text-primary shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-400 text-xs sm:leading-6"
 				aria-haspopup="listbox"
 				aria-expanded={selectState}
 				aria-labelledby="listbox-label"
@@ -91,16 +146,24 @@
 				role="listbox"
 				aria-labelledby="listbox-label"
 				aria-activedescendant="listbox-option-3"
-			>
-				{#each filteredOptionList as option (option[optionListConfigObject?.optionIdKey])}
+			>  {#if filteredOptionList.length === 0}
+            <li class="relative cursor-default select-none text-gray-400 px-3 py-2">
+                No options found
+            </li>
+        {:else}
+				{#each filteredOptionList as option, i (option[optionListConfigObject?.optionIdKey])}
 					<li
-						class="relative cursor-default select-none font-semibold text-primary hover:bg-gray-100"
+						class="relative cursor-default select-none font-semibold text-primary hover:bg-gray-100 {highlightedIndex ===
+						i
+							? 'bg-gray-100'
+							: ''}"
 						id="listbox-option-{option[optionListConfigObject?.optionIdKey]}"
 						role="option"
 					>
 						<button
 							on:click={() => handleOptionSelect(option)}
 							class="w-full py-2 pl-3 pr-9 flex justify-start"
+							class:bg-gray-100={highlightedIndex === i}
 						>
 							<span
 								class="block truncate font-normal"
@@ -108,7 +171,6 @@
 							>
 								{option[optionListConfigObject?.optionNameKey]}
 							</span>
-
 							{#if itemSelected === option[optionListConfigObject?.optionNameKey]}
 								<span class="absolute inset-y-0 right-0 flex items-center pr-4 text-indigo-600">
 									<svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -123,6 +185,7 @@
 						</button>
 					</li>
 				{/each}
+				{/if}
 			</ul>
 		{/if}
 	</div>

@@ -4,6 +4,6 @@
 </script>
 
 <div
-	class="rounded-full border-gray-300 border-t-orange-500 animate-spin"
+	class="rounded-full border-gray-300 border-t-accent-dark animate-spin"
 	style="width: {size}; height: {size}; border-width: {borderWidth};"
 ></div>

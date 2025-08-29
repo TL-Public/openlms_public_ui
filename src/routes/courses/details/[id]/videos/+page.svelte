@@ -4,7 +4,7 @@
 
 	export let data;
 
-	let { courseDetails, lang, testimonials } = data;
+	let { courseDetails, lang, testimonials, serviceToken } = data;
 
 	const url = $page.url;
 	let route = $page.route.id;
@@ -15,7 +15,7 @@
 	$: params = $page.params;
 </script>
 
-<div class="mt-0 mb-8 lg:mb-9 mx-4 lg:mt-0 2xl:my-12 2xl:mt-0 sm:px-3 px-1 pt-8">
+<div class="mt-0 mb-8 lg:mb-9 mx-4 lg:mt-0 2xl:my-12 2xl:mt-0 sm:px-3 px-1">
 	<VideoViewingPage
 		{route}
 		{params}
@@ -26,5 +26,6 @@
 		{videoUuid}
 		{lang}
 		{testimonials}
+		{serviceToken}
 	/>
 </div>

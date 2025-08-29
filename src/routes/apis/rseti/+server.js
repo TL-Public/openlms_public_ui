@@ -1,17 +1,27 @@
 import { json } from '@sveltejs/kit';
 import { BASE_URL } from '$lib/config';
+import { getHeaders } from '$lib/utils/helper';
+
 
 // API to get list of all RSETIs
-export async function GET({ locals }) {
+export async function GET({ locals, cookies }) {
 	let res;
 	const lang = locals?.lang || 'en';
 	try {
-		res = await fetch(`${BASE_URL}/apis/v1/rsetis`);
-
+		const authHeader = getHeaders(cookies);
+		res = await fetch(`${BASE_URL}/apis/v1/rsetis`, {
+			method:'GET',
+			headers:{
+				'Content-Type': 'application/json',
+				// ...authHeader
+			}
+		});
 		if (res?.status != 200 || !res?.ok) {
 			throw new Error('Failed to fetch data');
 		}
+
 		const data = await res?.json();
+		
 
 		if (data?.length === 0 || Object.keys(data)?.length === 0) {
 			throw new Error('No Data Found');
@@ -20,10 +30,12 @@ export async function GET({ locals }) {
 		let rsetiData = [];
 		data?.forEach((item) => {
 			if (item?.translations?.length > 0) {
-				const languageData = item?.translations?.find((langData) => langData?.languageCode === lang);
-				const enData = item?.translations?.find((langData) => langData?.languageCode === 'en');
+				const languageData = item?.translations?.find(
+					(langData) => langData?.languageCode === lang
+				);
+				const enData = item.translations?.find((langData) => langData?.languageCode === 'en');
 				if (languageData) {
-					rsetiData?.push({
+					rsetiData.push({
 						...item,
 						name: languageData.name,
 						address: languageData.address,
@@ -41,7 +53,7 @@ export async function GET({ locals }) {
 			}
 		});
 
-		rsetiData = rsetiData.sort(function (a, b) {
+		rsetiData = rsetiData?.sort(function (a, b) {
 			if (a.name?.toLowerCase()?.trim() < b.name?.toLowerCase()?.trim()) {
 				return -1;
 			}
@@ -51,8 +63,9 @@ export async function GET({ locals }) {
 			return 0;
 		});
 
-		return json(rsetiData);
+		return json(rsetiData, { status: res.status });
 	} catch (error) {
+		console.log('error', error);
 		return json({ error: error.message }, { status: res.status });
 	}
 }

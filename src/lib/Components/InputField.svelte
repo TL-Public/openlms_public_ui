@@ -34,8 +34,9 @@
 			{disabled}
 			{...$$restProps}
 		/>
-		<div class="absolute inset-y-0 right-3 flex items-center h-full pointer-events-auto">
-			<slot></slot>
-		</div>
+					<!-- Slot for custom icons -->
+					<div class="absolute inset-y-0 right-3 flex items-center h-full pointer-events-auto">
+						<slot></slot>
+					</div>
 	</div>
 </div>

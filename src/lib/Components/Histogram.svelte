@@ -1,9 +1,11 @@
 <script>
 	import { onMount } from 'svelte';
 	import Chart from 'chart.js/auto';
+
 	export let histogramId = 'Histogram-' + Math.random();
 	export let labels = [];
 	export let chartPlugins = {};
+
 	export let chartData = {
 		labels: labels,
 		datasets: [
@@ -23,6 +25,7 @@
 			}
 		]
 	};
+
 	export let chartOptions = {
 		responsive: true,
 		maintainAspectRatio: false,
@@ -32,6 +35,7 @@
 			}
 		}
 	};
+
 	let ctx;
 	onMount(() => {
 		ctx = document.getElementById(histogramId)?.getContext('2d');
@@ -42,13 +46,16 @@
 			plugins: chartPlugins
 		});
 	});
+
 	$: updateChart(chartData);
+
 	function updateChart() {
 		// clear old chart and draw new one
 		if (ctx) {
 			if (Chart.getChart(ctx)) {
 				Chart.getChart(ctx).destroy();
 			}
+
 			new Chart(ctx, {
 				type: 'bar',
 				data: chartData,
@@ -58,6 +65,7 @@
 		}
 	}
 </script>
+
 <div class="w-full">
 	<canvas id={histogramId} class="min-h-80">
 		<p>Hello Fallback World</p>

@@ -4,7 +4,6 @@
 	import { categoryList } from '$lib/data.js';
 	import { _ } from 'svelte-i18n';
 	import { formatDateMMMYYYY } from '$lib/utils/helper.js';
-	import GoogleMatrialIcon from '$lib/Components/GoogleMatrialIcon.svelte';
 
 	export let course;
 	export let showPlannedDate = false;
@@ -19,13 +18,13 @@
 {:else}
 	<a href={`/courses/details/${course?.uuid}`}>
 		<div
-			class="relative flex flex-col gap-1 hover:shadow-md justify-start h-full bg-blue-10 rounded-md shadow-lg border border-gray-100"
+			class="relative flex flex-col gap-1 hover:shadow-md justify-start h-full bg-white rounded-md shadow-lg"
 		>
 			<div class="h-48 overflow-hidden p-3 pb-0">
 				<img
 					src={course?.imageUrl ?? '/courseThumbnail.png'}
 					alt=""
-					class="w-full object-cover object-center aspect-square grayscale"
+					class="w-full object-cover object-center aspect-square"
 					loading="lazy"
 				/>
 			</div>
@@ -39,20 +38,36 @@
 				>
 			</div>
 
-			<div class="mx-4 my-2 mb-4 mt-auto grid grid-rows-2 gap-2">
+			<div class="mx-4 my-2 mb-4 mt-auto flex flex-col gap-2">
 				<span class="text-xs flex items-center gap-1">
-					<img src="/chapters.svg" alt="" />
+						<img src="/chapters.svg" alt="" />
 
-					{$_('Chapters')} : {numberOfChapters}</span
-				>
-				{#if showPlannedDate}
-					<span class="text-xs flex items-center gap-1 font-medium">
-						<img src="/calendar.svg" alt="" />
-
-						{$_('PlannedDate')} : {formatDateMMMYYYY(
-							new Date(course.startYear, course.startMonth - 1)
-						)}</span
+						{$_('Chapters')} : {numberOfChapters}</span
 					>
+				{#if showPlannedDate}
+					<!-- <span class="text-xs flex items-center gap-1">
+						<img src="/chapters.svg" alt="" />
+
+						{$_('Sessions planned')} : {course?.plannedDates?.length}</span
+					> -->
+					<div class="flex flex-col gap-2 text-xs">
+						<div>
+							<div class="flex items-start gap-1 mb-2">
+								<img src="/calendar.svg" alt="" />
+								<!-- {$_('PlannedDates')} : -->
+								 {$_('Sessions planned')} : {course?.plannedDates?.length ?? 0}
+							</div>
+							<div class="flex gap-1 flex-wrap">
+								{#each course.plannedDates ?? [] as date}
+									<span
+										class="bg-blue-100 px-[6px] py-[1px] mx-[2px] rounded-[10px] text-xs inline-block"
+										>{date}</span
+									>
+								{/each}
+							</div>
+						</div>
+					</div>
+				
 				{/if}
 				<div class="text-xs flex justify-between items-center">
 					<!-- <span class=" text-xs rounded-full border-slate-400 border-2 w-fit p-0.5 px-2"
@@ -65,20 +80,16 @@
 						{$_('Days')}</span
 					>
 					<span
-						><a
-							href={`/courses/details/${course?.uuid}`}
-							class="text-white flex items-center justify-center"
-							title="View course details"
-						>
-							<GoogleMatrialIcon
-								iconName="arrow_forward"
-								styleType="sharp"
-								addClass={' text-base  h-6 w-6 bg-secondary rounded-full flex items-center justify-center -rotate-45'}
-							/>
-						</a></span
+						><a href={`/courses/details/${course?.uuid}`} class="text-blue-600">
+							{$_('Details')}</a
+						></span
 					>
 				</div>
 			</div>
 		</div>
 	</a>
 {/if}
+
+<style>
+	/* .pill styles removed, now using Tailwind classes in markup */
+</style>

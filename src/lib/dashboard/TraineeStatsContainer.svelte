@@ -80,6 +80,7 @@
 	let year = 2023;
 	$: populateTableData(statesStatsData);
 	function populateTableData() {
+		if (!statesStatsData) return;
 		const requiredData = statesStatsData[year];
 		if (!requiredData) return;
 		const mapDataArray = Object.values(requiredData).sort((a, b) => b.traineeCnt - a.traineeCnt);
@@ -97,7 +98,7 @@
 	}
 </script>
 
-<InsightsContainer {insightStats} />
+<!-- <InsightsContainer {insightStats} /> -->
 
 <div class=" mt-4 p-4 bg-white my-4 rounded min-h-[500px]">
 	<MapAndTableWrapper
@@ -109,7 +110,7 @@
 		heatMapStartingColorGradient={0xdcfce7}
 		heatMapEndingColorGradient={0x166534}
 		tableHeaderDisplay={tableHeaderDisplayTrainee}
-		mapHeader={$format('TraineeDistribution') + ' (2023-2024)'}
+		mapHeader={$format('TraineeDistribution') + ' (2023)'}
 		tableHeading={$format('StateRanking')}
 		placeholderForSearch={$format('SearchByState')}
 	/>
@@ -137,21 +138,27 @@
 	/>
 </div>
 
+
+{#if !traineeStatsByCourseCategory.error }
 <div class="mb-6">
 	<CategoryComparisionCard {traineeStatsByCourseCategory} />
 </div>
+{/if}
+{#if !traineesByCourse.error}
 <div class="mb-6">
 	<TraineeOnboardChartCourseWise {traineesByCourse} {courseList} {lang} />
 </div>
+{/if}
+{#if !traineesByState.error}
 <div class="mb-6">
 	<TraineeOnboardChartStateWise {traineesByState} {statesData} {lang} />
 </div>
-<!-- 
+{/if}
 
 <div class="mb-6">
-	<RegisteredTraineeChart />
-</div> -->
+	<!-- <RegisteredTraineeChart {courseList} {lang} /> -->
+</div>
 
-<!-- <div class="mb-6">
-	<UnregisteredTraineeChart />
-</div> -->
+<div class="mb-6">
+	<!-- <UnregisteredTraineeChart {courseList} {lang} /> -->
+</div>

@@ -148,13 +148,13 @@
 					actionData: data
 				})}
 		>
-			<div class="pr-4 bg-white rounded-md shadow-sm">
+			<div class="pr-4 bg-white rounded-md">
 				<div class="flex gap-3">
 					{#if datatableCardConfig.icon.isImage}
 						<!-- Render image taking the full height of the card -->
 						<div class="flex items-center">
 							<img
-								class="h-full w-24 rounded-l-md object-cover grayscale"
+								class="h-full w-24 rounded-l-md object-cover"
 								src={data?.imageUrl}
 								alt={'image of a course'}
 							/>
@@ -164,7 +164,7 @@
 						<div class="bg-blue-10 p-3 flex justify-center items-center rounded-l-md">
 							<div class="p-2 bg-white rounded-full">
 								<img
-									class="w-5 h-5 bg-white rounded-full font-semibold text-orange-100"
+									class="w-5 h-5 bg-white rounded-full font-semibold text-accent"
 									src={datatableCardConfig.icon.iconSrc}
 									alt={datatableCardConfig.icon.iconAlt}
 								/>
@@ -178,7 +178,8 @@
 						</h2>
 						{#each cardHeaderDisplay?.nonTitleData ?? [] as key, index (index)}
 							<p class="text-xs text-darkGray {key.highlight ? 'font-bold' : 'font-medium'}">
-								{key.name}: <span>{data[key.key] ?? '-'}</span>
+								{key.name}:
+								<span>{data[key.key] ?? '-'} </span>
 							</p>
 						{/each}
 					</div>

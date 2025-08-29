@@ -1,24 +1,34 @@
 import { error } from '@sveltejs/kit';
 import { String_Constants } from '../../../../config/constants';
 import { formatDateMMMYYYY } from '$lib/utils/helper.js';
+import { format } from 'svelte-i18n';
 
 export async function load({ params, fetch, parent }) {
 	const parentData = await parent();
 	const lang = parentData?.lang ? parentData.lang : 'en';
 	const statesMap = parentData.statesMap ? parentData.statesMap : {};
 
+	let unauthorized = false;
 	let centersData = [];
 	let statesData = [];
 
+	let courseTitle = '';
 	async function fetchRsetisOfCourse() {
+		let allStatesDisplayText = '';
+		if (lang === 'en') {
+			allStatesDisplayText = String_Constants.ALL_STATES;
+		}
+		if (lang === 'hi') {
+			allStatesDisplayText = String_Constants.ALL_STATES_HI;
+		}
 		try {
 			const rsetisOfCourseResp = await fetch(`/apis/courses/details/${params.id}/rsetis`);
-			if (rsetisOfCourseResp?.status === 'rejected') {
-				return { centersData, statesData };
-			}
 
 			if (!rsetisOfCourseResp.ok) {
-				return { centersData, statesData };
+				if (rsetisOfCourseResp.status === 401) {
+					unauthorized = true;
+				}
+				return { centersData: [], statesData: [{ extId: -1, name: allStatesDisplayText }] };
 			}
 
 			if (rsetisOfCourseResp.status == 200) {
@@ -27,7 +37,7 @@ export async function load({ params, fetch, parent }) {
 
 				//checking for a known field
 				if (!restiUUIDs?.rsetiCourses?.length) {
-					return { centersData, statesData };
+					return { centersData, statesData: [{ extId: -1, name: allStatesDisplayText }] };
 				}
 
 				centersData =
@@ -71,38 +81,45 @@ export async function load({ params, fetch, parent }) {
 						extId: element
 					};
 				});
-				statesData = [{ extId: -1, name: String_Constants.ALL_STATES }, ...statesData];
+				statesData = [{ extId: -1, name: allStatesDisplayText }, ...statesData];
 				return { centersData, statesData };
 			}
 			return { centersData, statesData };
 		} catch (err) {
-			return { centersData, statesData };
+			return { centersData, statesData: [{ extId: -1, name: allStatesDisplayText }] };
 		}
 	}
 
 	async function fetchCourseDetails() {
 		let courseDetailsResp;
+		let languageFilteredcourseDetails = {};
 		try {
 			courseDetailsResp = await fetch(`/apis/courses/details/${params.id}`);
 			if (courseDetailsResp?.status !== 200 && !courseDetailsResp.ok) {
-				throw new Error('Failed to fetch course details');
+				if (courseDetailsResp.status === 401) {
+					unauthorized = true;
+				}
+				return languageFilteredcourseDetails;
 			}
 			//when promise is fulfilled, then only value property will be returned in response
 			const courseDetails = await courseDetailsResp.json();
 
 			// extract the language data and make it top level in data
-			let languageFilteredcourseDetails = {};
+
 			const translationData = courseDetails?.translations?.find(
 				(translation) => translation.languageCode === lang
 			);
+			courseTitle = translationData?.title ? `${translationData?.title}` : 'Course Details';
+
 			languageFilteredcourseDetails = { ...courseDetails, ...translationData };
 
 			return languageFilteredcourseDetails;
 		} catch (err) {
-			throw error(courseDetailsResp.status, {
-				message: 'Failed to fetch course details',
-				status: courseDetailsResp.status
-			});
+			// throw error(courseDetailsResp.status, {
+			// 	message: 'Failed to fetch course details',
+			// 	status: courseDetailsResp.status
+			// });
+			return languageFilteredcourseDetails;
 		}
 	}
 
@@ -125,6 +142,8 @@ export async function load({ params, fetch, parent }) {
 		courseDetails: await fetchCourseDetails(),
 		rsetiOfCourse: await fetchRsetisOfCourse(),
 		courseStats: await fetchCourseStats(),
-		lang
+		lang,
+		unauthorized,
+		courseTitle
 	};
 }

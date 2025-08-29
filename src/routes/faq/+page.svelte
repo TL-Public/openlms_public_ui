@@ -1,6 +1,8 @@
 <script>
 	import { page } from '$app/stores';
 	import FaqComponent from '$lib/faq/FAQComponent.svelte';
+	import { onMount } from 'svelte';
+	import { setAuthStatus } from '$lib/utils/helper';
 
 	export let data;
 
@@ -44,8 +46,12 @@
 			name: languageSpecificCategoryMap.get(id) || 'Unknown category'
 		}));
 	}
+
+	onMount(() => {
+		setAuthStatus(data?.unauthorized);
+	});
 </script>
 
-<div class="2xl:max-w-7xl 2xl:m-auto pt-8">
+<div class="2xl:max-w-7xl 2xl:m-auto">
 	<FaqComponent {route} FAQ={filteredFAQData} {faqSideBarList} faqError={error} {categoryError} />
 </div>

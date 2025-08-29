@@ -4,6 +4,9 @@
 	import { Chart } from 'chart.js/auto';
 	import PieChart from '$lib/Components/PieChart.svelte';
 	import ChartDataLabels from 'chartjs-plugin-datalabels';
+	import Filter from '$lib/Components/Filter.svelte';
+	import { format } from 'svelte-i18n';
+
 	const sampleData = [
 		{ name: 'Photo Farming, Lamination and Screen Printing', views: 3874 },
 		{ name: 'Masonry & Concrete Work', views: 2383 },
@@ -70,6 +73,8 @@
 		]
 	};
 	let chartOptions = {
+		responsive: true,
+		maintainAspectRatio: false,
 		layout: {
 			padding: {
 				left: 10,
@@ -106,36 +111,46 @@
 	let chartPlugins = [htmlLegendPlugin, ChartDataLabels];
 
 	const viewTopOptions = [
-		{ id: 1, name: '10' },
-		{ id: 2, name: '20' },
-		{ id: 3, name: '30' },
-		{ id: 4, name: '40' },
-		{ id: 5, name: '50' },
-		{ id: 6, name: '60' },
-		{ id: 7, name: '70' }
+		{ id: 1, name: '5' },
+		{ id: 2, name: '10' }
+		// { id: 3, name: '30' },
+		// { id: 4, name: '40' },
+		// { id: 5, name: '50' },
+		// { id: 6, name: '60' },
+		// { id: 7, name: '70' }
 	];
 </script>
 
-<div class="bg-white w-full flex flex-col py-8 px-16 rounded-lg">
-	<div class="flex mb-10 justify-between">
+<div class="bg-white w-full flex flex-col py-8 md:px-16 px-8 rounded-lg">
+	<div class="flex flex-col md:flex-row justify-between gap-2 md:gap-0 mb-4">
 		<div>
-			<h1 class="text-xl font-bold text-primary">Top 10 Courses</h1>
-			<p class=" text-xs">Top 10 popular courses</p>
+			<h1 class="text-base font-bold text-primary">{$format('TopCoursesBasedOnViewerShip')}</h1>
+			<!-- <p class=" text-xs">{$format('TopCoursesBasedOnViewerShip')}</p> -->
 		</div>
 
-		<div class="flex items-center gap-2">
+		<div class="flex items-center gap-2 text-xs">
 			<h3>View top</h3>
-			<SelectInput showFieldName={false} optionList={viewTopOptions} itemSelected={10} />
+			<!-- <SelectInput showFieldName={false} optionList={viewTopOptions} itemSelected={10} /> -->
+			<Filter
+				optionList={viewTopOptions}
+				optionListConfigObject={{ optionNameKey: 'name', optionIdKey: 'id' }}
+				itemSelected={viewTopOptions[1]?.name}
+				on:filterItemSelected={(e) => {
+					// error = null;
+					// updateChart(e.detail.id);
+				}}
+				addClass="w-16"
+			/>
 			<h3>Courses</h3>
 		</div>
 	</div>
 
 	<!-- <button on:click={rerenderChart} class="bg-primary text-white px-4 py-2 rounded-md">Rerender</button> -->
-	<div class="grid grid-cols-2 gap-x-8">
+	<div class="grid lg:grid-cols-2 grid-cols-1 gap-x-8">
 		<PieChart type="doughnut" {chartData} labels={chartLabels} {chartPlugins} {chartOptions} />
 		<div class="flex flex-col">
 			<div class="border rounded-lg">
-				<table class="w-full border-collapse divide-y divide-gray-300">
+				<table class="w-full border-collapse divide-y divide-gray-300 sm:text-sm text-xs">
 					<thead class=" text-white">
 						<tr>
 							<th class="text-left p-2 rounded-tl-lg bg-primary">Color</th>
@@ -160,7 +175,7 @@
 								<td class="p-2">{label.name}</td>
 								<td class="text-right p-2">{label.views}</td>
 								<td class="p-2 text-center">
-									<GoogleMatrialIcon iconName="visibility" addClass="text-orange-100" />
+									<GoogleMatrialIcon iconName="visibility" addClass="text-accent" />
 								</td>
 							</tr>
 						{/each}

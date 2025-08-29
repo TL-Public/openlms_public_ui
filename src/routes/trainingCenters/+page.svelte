@@ -1,6 +1,5 @@
 <script>
 	import { page } from '$app/stores';
-	import { tableData } from '$lib/data.js';
 	import AboutRseti from '$lib/TrainingCenters/AboutRSETI.svelte';
 	import SearchBar from '$lib/Components/SearchBar.svelte';
 	import Filters from '$lib/TrainingCenters/Filters.svelte';
@@ -23,8 +22,9 @@
 	let route = $page.route.id;
 	let params = $page.params;
 	// taking data from +page.js
-	export let data;
-	const { courseData, stateData, statesMap, centersData, allCentersMap } = data;
+	export let data;	
+	const { courseData, stateData, statesMap, centersData, allCentersMap, lang } = data;
+
 	// function to flatten the incoming centersData
 	function createFlattenedCenterData(centerData) {
 		let flattenedData =
@@ -42,8 +42,8 @@
 	let filterdTableData = flattenedTableData;
 	// For creating filter options
 
-	let courseFilterValue = String_Constants.ALL_COURSES;
-	let stateFilterValue = String_Constants.ALL_STATES;
+	let courseFilterValue = lang === 'hi'? String_Constants.ALL_COURSES_HI :String_Constants.ALL_COURSES;
+	let stateFilterValue = lang === 'hi'? String_Constants.ALL_STATES_HI : String_Constants.ALL_STATES;
 
 	// for handeling the search value passed from the SearchBar component
 	let searchValue = '';
@@ -61,7 +61,7 @@
 
 		let centersUnderCourse = [];
 		// if filter value is all courses then use all the available data
-		if (courseFilter === String_Constants.ALL_COURSES) {
+		if (courseFilter === String_Constants.ALL_COURSES || courseFilter === String_Constants.ALL_COURSES_HI ) {
 			centersUnderCourse = flattenedTableData;
 		} else {
 			// Handle the filter according to Course Data here
@@ -244,8 +244,8 @@
 	});
 </script>
 
-<AboutRseti {params} {route} />
 <div class=" mx-4 mb-8 mt-0 lg:mx-[92px] lg:mb-9 lg:mt-0">
+	<AboutRseti {params} {route} />
 	<Filters
 		on:handleFilters={handleFilter}
 		bind:courseFilterValue
@@ -257,7 +257,7 @@
 	<div class="mt-8 mb-4 flex flex-col w-full">
 		<SearchBar
 			on:handleSearchValue={sendSearchValueToDatatable}
-			placeholder={$format('SearchByTitle')}
+			placeholder={$format('SearchByRSETIName')}
 			searchButton={false}
 			bind:searchBoxValue={searchValue}
 		/>
@@ -286,8 +286,6 @@
 		{tableHeaderDisplay}
 		{searchValue}
 		{loading}
-		iconColor={'secondary'}
-		iconHoverColor={'#143164'}
 		defaultSortItem={sortActionItems[0]?.name}
 		{selectedSortOption}
 		searchParameter="name"
